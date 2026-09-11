@@ -198,7 +198,6 @@ TW_INCLUDE_LPTOOLS := true
 TW_EXCLUDE_APEX := true
 TW_EXCLUDE_LPDUMP := true
 
-
 # ======================
 # Hack de versión (compatible con cualquier ROM)
 # ======================
@@ -208,15 +207,5 @@ PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
 VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 
-# ======================
-# Vendor ramdisk fragment (platform) con módulos y HALs
-# ======================
-
 # Directorio del recovery con archivos extra (init.recovery.*.rc)
 TARGET_RECOVERY_DEVICE_DIRS := $(DEVICE_PATH)
-
-# ======================
-# ======================
-
-# ======================
-# ======================
