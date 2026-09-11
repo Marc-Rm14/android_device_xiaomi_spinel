@@ -207,3 +207,12 @@ PLATFORM_VERSION := 99.87.36
 PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
 VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
+
+# ======================
+# Vendor ramdisk fragment (platform) con módulos y HALs
+# ======================
+BOARD_VENDOR_RAMDISK_FRAGMENTS := platform
+BOARD_VENDOR_RAMDISK_FRAGMENT.platform.PREBUILT := $(DEVICE_PATH)/prebuilt/vendor_ramdisk.cpio.gz
+
+# Directorio del recovery con archivos extra (init.recovery.*.rc)
+TARGET_RECOVERY_DEVICE_DIRS := $(DEVICE_PATH)
