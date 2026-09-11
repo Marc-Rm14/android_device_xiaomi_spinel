@@ -218,6 +218,9 @@ TARGET_RECOVERY_DEVICE_DIRS := $(DEVICE_PATH)
 # ======================
 # Vendor ramdisk fragment (platform con tipo correcto)
 # ======================
-BOARD_VENDOR_RAMDISK_FRAGMENTS := my_platform
-BOARD_VENDOR_RAMDISK_FRAGMENT.my_platform.PREBUILT := $(DEVICE_PATH)/prebuilt/vendor_ramdisk.cpio.gz
-BOARD_VENDOR_RAMDISK_FRAGMENT.my_platform.MKBOOTIMG_ARGS := --ramdisk_type 1 --ramdisk_name ""
+
+# ======================
+# Vendor ramdisk kernel modules (fragment platform)
+# ======================
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES := \
+    $(wildcard $(DEVICE_PATH)/prebuilt/modules/*.ko)
