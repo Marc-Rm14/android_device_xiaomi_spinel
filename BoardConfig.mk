@@ -171,3 +171,19 @@ BOARD_KERNEL_IMAGE_NAME := Image
 # Vendor cmdline (del vendor_boot.img original, sin "bootconfig")
 BOARD_VENDOR_CMDLINE := bootopt=64S3,32N2,64N2
 BOARD_MKBOOTIMG_ARGS += --vendor_cmdline $(BOARD_VENDOR_CMDLINE)
+
+# ======================
+# Kernel y DTB prebuilt
+# ======================
+TARGET_NO_KERNEL := true
+BOARD_USES_GENERIC_KERNEL_IMAGE := true
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
+BOARD_KERNEL_SEPARATED_DTB := true
+
+# ======================
+# Recovery ramdisk en vendor_boot
+# ======================
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+TARGET_NO_RECOVERY := true
