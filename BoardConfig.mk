@@ -214,7 +214,6 @@ TARGET_RECOVERY_DEVICE_DIRS := $(DEVICE_PATH)
 # Fragmento Platform (Vendor Ramdisk Stock)
 # ======================
 BOARD_VENDOR_RAMDISK_FRAGMENTS := platform
-BOARD_VENDOR_RAMDISK_FRAGMENT.platform.TYPE := platform
-BOARD_VENDOR_RAMDISK_FRAGMENT.platform.STAGING_DIR := $(PRODUCT_OUT)/vendor_ramdisk_platform
-BOARD_VENDOR_RAMDISK_FRAGMENT.platform.FILES := \
-    $(call find-copy-subdir-files,*,$(DEVICE_PATH)/prebuilt/vendor_ramdisk,$(PRODUCT_OUT)/vendor_ramdisk_platform)
+
+BOARD_VENDOR_RAMDISK_FRAGMENT.platform.PREBUILT := \
+    $(DEVICE_PATH)/prebuilt/vendor_ramdisk_platform.cpio.lz4
