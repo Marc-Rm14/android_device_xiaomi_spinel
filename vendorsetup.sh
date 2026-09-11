@@ -44,4 +44,4 @@ export OF_UNMOUNT_SYSTEM=1
 # ======================
 # Reference vendor_boot (preserva módulos/HALs stock)
 # ======================
-export FOX_REFERENCE_VENDOR_BOOT_IMAGE=$(DEVICE_PATH)/prebuilt/data/stock-vendor_boot.img
+export FOX_REFERENCE_VENDOR_BOOT_IMAGE=device/xiaomi/spinel/prebuilt/data/stock-vendor_boot.img
