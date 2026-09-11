@@ -158,3 +158,7 @@ BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
 # ======================
 PLATFORM_SECURITY_PATCH := 2026-03-05
 PLATFORM_VERSION := 16
+
+# AVB algorithm for vbmeta_system and vbmeta_vendor
+BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA4096
+BOARD_AVB_VBMETA_VENDOR_ALGORITHM := SHA256_RSA4096
