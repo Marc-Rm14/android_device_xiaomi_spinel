@@ -164,8 +164,10 @@ BOARD_BOOT_HEADER_VERSION := 4
 BOARD_AVB_ENABLE := true
 
 # Vendor cmdline (extraída del vendor_boot.img original)
-BOARD_VENDOR_CMDLINE := bootopt=64S3,32N2,64N2 bootconfig
-BOARD_MKBOOTIMG_ARGS += --vendor_cmdline $(BOARD_VENDOR_CMDLINE)
 
 # Kernel image name (GKI ARM64)
 BOARD_KERNEL_IMAGE_NAME := Image
+
+# Vendor cmdline (del vendor_boot.img original, sin "bootconfig")
+BOARD_VENDOR_CMDLINE := bootopt=64S3,32N2,64N2
+BOARD_MKBOOTIMG_ARGS += --vendor_cmdline $(BOARD_VENDOR_CMDLINE)
