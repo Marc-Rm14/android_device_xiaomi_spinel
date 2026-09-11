@@ -2,7 +2,6 @@
 # OrangeFox vendorsetup for Redmi Note 15 (spinel)
 
 # Product spec
-add_lunch_combo twrp_spinel-eng
 
 # ======================
 # OrangeFox build variables
