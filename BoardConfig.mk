@@ -43,11 +43,11 @@ BOARD_MKBOOTIMG_ARGS += --kernel_offset $(BOARD_KERNEL_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_TAGS_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
+BOARD_MKBOOTIMG_ARGS += --dtb $(DEVICE_PATH)/prebuilt/dtb.img
 
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
-TARGET_KERNEL_SOURCE := kernel/xiaomi/spinel
-TARGET_KERNEL_CONFIG := gki_defconfig
+
 
 # ======================
 # Assert
@@ -143,27 +143,11 @@ TW_HAS_MTP := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_EXCLUDE_TWRPAPP := true
 
-# ======================
-# AVB
-# ======================
-
-# ======================
-# Platform
-# ======================
-PLATFORM_SECURITY_PATCH := 2026-03-05
-PLATFORM_VERSION := 16
-
-# AVB algorithm for vbmeta_system and vbmeta_vendor
-
-# AVB minimal (como transsion mt6789-common)
-
 # Boot header version para OrangeFox
 BOARD_BOOT_HEADER_VERSION := 4
 
 # AVB (minimal, como transsion mt6789-common)
 BOARD_AVB_ENABLE := true
-
-# Vendor cmdline (extraída del vendor_boot.img original)
 
 # Kernel image name (GKI ARM64)
 BOARD_KERNEL_IMAGE_NAME := Image
@@ -179,7 +163,6 @@ TARGET_NO_KERNEL := true
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
-BOARD_KERNEL_SEPARATED_DTB := true
 
 # ======================
 # Recovery ramdisk en vendor_boot
@@ -187,3 +170,40 @@ BOARD_KERNEL_SEPARATED_DTB := true
 BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 TARGET_NO_RECOVERY := true
+
+# ======================
+# Flags críticos para MT6789 + vendor_boot
+# ======================
+TW_LOAD_VENDOR_BOOT_MODULES := true
+BOARD_RAMDISK_USE_LZ4 := true
+BOARD_HAS_LARGE_FILESYSTEM := true
+
+# Build workarounds para LineageOS 21+
+BUILD_BROKEN_DUP_RULES := true
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+ALLOW_MISSING_DEPENDENCIES := true
+
+# Crypto (desencriptar /data)
+TW_INCLUDE_CRYPTO := true
+TW_INCLUDE_CRYPTO_FBE := true
+TW_FORCE_KEYMASTER_VER := true
+
+# Herramientas útiles
+TW_INCLUDE_FB2PNG := true
+TW_INCLUDE_REPACKTOOLS := true
+TW_INCLUDE_RESETPROP := true
+TW_INCLUDE_LPTOOLS := true
+
+# Reducción de tamaño
+TW_EXCLUDE_APEX := true
+TW_EXCLUDE_LPDUMP := true
+
+
+# ======================
+# Hack de versión (compatible con cualquier ROM)
+# ======================
+PLATFORM_SECURITY_PATCH := 2099-12-31
+PLATFORM_VERSION := 99.87.36
+PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
+VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
+BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
