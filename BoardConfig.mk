@@ -159,7 +159,7 @@ BOARD_MKBOOTIMG_ARGS += --vendor_cmdline $(BOARD_VENDOR_CMDLINE)
 # ======================
 # Kernel y DTB prebuilt
 # ======================
-TARGET_NO_KERNEL := true
+TARGET_NO_KERNEL := false
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
@@ -186,7 +186,6 @@ ALLOW_MISSING_DEPENDENCIES := true
 # Crypto (desencriptar /data)
 TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_CRYPTO_FBE := true
-TW_FORCE_KEYMASTER_VER := true
 
 # Herramientas útiles
 TW_INCLUDE_FB2PNG := true
