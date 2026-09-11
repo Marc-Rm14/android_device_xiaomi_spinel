@@ -216,10 +216,7 @@ BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 TARGET_RECOVERY_DEVICE_DIRS := $(DEVICE_PATH)
 
 # ======================
-# Vendor ramdisk fragment (platform con tipo correcto)
 # ======================
 
 # ======================
-# Vendor ramdisk kernel modules (fragment platform)
 # ======================
-    $(wildcard $(DEVICE_PATH)/prebuilt/modules/*.ko)
