@@ -40,8 +40,3 @@ export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
 export OF_DONT_PATCH_ENCRYPTED_DEVICE=1
 export OF_ENABLE_LPTOOLS=1
 export OF_UNMOUNT_SYSTEM=1
-
-# ======================
-# Reference vendor_boot (preserva módulos/HALs stock)
-# ======================
-export FOX_REFERENCE_VENDOR_BOOT_IMAGE=device/xiaomi/spinel/prebuilt/data/stock-vendor_boot.img
