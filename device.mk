@@ -5,12 +5,6 @@ include $(call all-makefiles-under,$(LOCAL_PATH))
 endif
 
 # ======================
-# Fragment platform stock (HALs, init scripts, VINTF)
-# ======================
-PRODUCT_COPY_FILES += \
-    $(call find-copy-subdir-files,*,$(DEVICE_PATH)/prebuilt/vendor_ramdisk,$(TARGET_COPY_OUT_VENDOR_RAMDISK))
-
-# ======================
 # MTK plpath utils (crítico para recovery MTK)
 # ======================
 PRODUCT_PACKAGES += \
