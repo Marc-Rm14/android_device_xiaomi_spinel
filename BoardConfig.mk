@@ -222,5 +222,4 @@ TARGET_RECOVERY_DEVICE_DIRS := $(DEVICE_PATH)
 # ======================
 # Vendor ramdisk kernel modules (fragment platform)
 # ======================
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES := \
     $(wildcard $(DEVICE_PATH)/prebuilt/modules/*.ko)
