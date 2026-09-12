@@ -208,9 +208,3 @@ BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 
 # Directorio del recovery con archivos extra (init.recovery.*.rc)
 TARGET_RECOVERY_DEVICE_DIRS := $(DEVICE_PATH)
-
-# ======================
-# Vendor ramdisk principal (stock platform ramdisk)
-# ======================
-BOARD_VENDOR_RAMDISK_BINARY := \
-    $(DEVICE_PATH)/prebuilt/vendor_ramdisk_platform.cpio.lz4

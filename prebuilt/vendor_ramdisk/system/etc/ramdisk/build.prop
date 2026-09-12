@@ -1,0 +1,22 @@
+####################################
+# from generate-common-build-props
+# These properties identify this partition image.
+####################################
+ro.product.bootimage.brand=Redmi
+ro.product.bootimage.device=spinel
+ro.product.bootimage.manufacturer=Xiaomi
+ro.product.bootimage.model=spinel
+ro.product.bootimage.name=miodm_spinel
+ro.bootimage.build.date=Tue Jul 28 17:44:45 CST 2026
+ro.bootimage.build.date.utc=1785231885
+ro.bootimage.build.fingerprint=Redmi/spinel/spinel:16/BP2A.250605.031.A3/OS3.0.302.0.WPGMIXM:user/release-keys
+ro.bootimage.build.id=BP2A.250605.031.A3
+ro.bootimage.build.tags=release-keys
+ro.bootimage.build.type=user
+ro.bootimage.build.version.incremental=OS3.0.302.0.WPGMIXM
+ro.bootimage.build.version.release=16
+ro.bootimage.build.version.release_or_codename=16
+ro.bootimage.build.version.sdk=36
+ro.bootimage.build.version.sdk_full=36.0
+# end of file
+
