@@ -171,6 +171,7 @@ BOARD_VNDK_VERSION := current
 TARGET_NO_KERNEL := true
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 TARGET_NO_RECOVERY := true
+TARGET_ROOT_OUT := $(TARGET_OUT)/recovery/root
 
 # ======================
 # Flags críticos para MT6789 + vendor_boot
