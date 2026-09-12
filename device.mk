@@ -5,6 +5,8 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
 ENABLE_VIRTUAL_AB := true
 
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
+
 # Paquetes críticos de MTK para recovery
 PRODUCT_PACKAGES += \
     mtk_plpath_utils.recovery \
