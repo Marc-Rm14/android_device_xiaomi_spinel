@@ -11,14 +11,6 @@ PRODUCT_PACKAGES += \
     mtk_plpath_utils.recovery
 
 # ======================
-# crypto/FBE
-# ======================
-PRODUCT_PACKAGES += \
-    android.hardware.security.keymint \
-    android.hardware.security.secureclock \
-    android.hardware.security.sharedsecret
-
-# ======================
 # Librerías críticas del recovery
 # ======================
 TARGET_RECOVERY_DEVICE_MODULES += \

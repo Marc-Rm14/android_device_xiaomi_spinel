@@ -41,3 +41,4 @@ export OF_DONT_PATCH_ENCRYPTED_DEVICE=1
 export OF_ENABLE_LPTOOLS=1
 export OF_UNMOUNT_SYSTEM=1
 export FOX_REFERENCE_VENDOR_BOOT_IMAGE=$(gettop)/device/xiaomi/spinel/prebuilt/stock_vendor_boot.img
+export FOX_ADD_API_V36_PREBUILTS=1
