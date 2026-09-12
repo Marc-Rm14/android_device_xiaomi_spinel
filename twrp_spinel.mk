@@ -1,6 +1,14 @@
-$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
+
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+ENABLE_VIRTUAL_AB := true
+PRODUCT_TARGET_VNDK_VERSION := 34
+PRODUCT_SHIPPING_API_LEVEL := 31
+
 
 PRODUCT_DEVICE := spinel
 PRODUCT_NAME := twrp_spinel
