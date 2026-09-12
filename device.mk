@@ -11,10 +11,9 @@ PRODUCT_PACKAGES += \
     mtk_plpath_utils.recovery
 
 # ======================
-# Keymaster (crypto/FBE)
+# crypto/FBE
 # ======================
 PRODUCT_PACKAGES += \
-    android.hardware.keymaster@4.1 \
     android.hardware.security.keymint \
     android.hardware.security.secureclock \
     android.hardware.security.sharedsecret
