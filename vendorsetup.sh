@@ -16,9 +16,6 @@ export FOX_VIRTUAL_AB_DEVICE=1
 # Recovery va en vendor_boot
 export FOX_VENDOR_BOOT_RECOVERY=1
 
-# Kernel prebuilt (punto H de la doc)
-export OF_FORCE_PREBUILT_KERNEL=1
-
 # Keymaster version (punto J de la doc)
 export OF_DEFAULT_KEYMASTER_VERSION=4.1
 

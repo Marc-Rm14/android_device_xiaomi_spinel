@@ -1,20 +1,20 @@
 # Android fstab for Redmi Note 15 (spinel) - MT6789
-# <src> <mnt_point> <type> <mnt_flags> <fs_mgr_flags>
+# OrangeFox recovery fstab
+# Basado en /vendor/etc/fstab.in.mt6789 (stock)
 
-# Data, metadata, cache
-/dev/block/by-name/userdata /data f2fs rw wait,check,formattable,quota,resize,fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized,keydirectory=/metadata/vold/metadata_encryption
-/dev/block/by-name/userdata /data ext4 rw wait,check,formattable,quota,resize
-/dev/block/by-name/metadata /metadata ext4 rw wait,check,formattable
-/dev/block/by-name/rescue /cache ext4 rw wait,check,formattable
+# Userdata, Metadata y Cache
+/dev/block/by-name/userdata /data f2fs rw noatime,nosuid,nodev,discard,noflush_merge,fsync_mode=nobarrier,reserve_root=134217,resgid=1065,inlinecrypt wait,check,formattable,quota,latemount,resize,reservedsize=128m,checkpoint=fs,fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized,keydirectory=/metadata/vold/metadata_encryption,fsverity
+/dev/block/by-name/metadata /metadata ext4 rw noatime,nosuid,nodev,discard wait,check,formattable,first_stage_mount
+/dev/block/by-name/rescue /cache ext4 rw noatime,nosuid,nodev,discard wait,check,formattable
 
-# Vendor special partitions
-/dev/block/by-name/nvdata /mnt/vendor/nvdata ext4 rw wait,check
-/dev/block/by-name/nvcfg /mnt/vendor/nvcfg ext4 rw wait,check
-/dev/block/by-name/protect1 /mnt/vendor/protect_f ext4 rw wait,check
-/dev/block/by-name/protect2 /mnt/vendor/protect_s ext4 rw wait,check
-/dev/block/by-name/persist /mnt/vendor/persist ext4 rw wait,check
+# Particiones de protección y calibración MediaTek
+/dev/block/by-name/protect1 /mnt/vendor/protect_f ext4 rw wait,check,formattable
+/dev/block/by-name/protect2 /mnt/vendor/protect_s ext4 rw wait,check,formattable
+/dev/block/by-name/nvdata /mnt/vendor/nvdata ext4 rw wait,check,formattable
+/dev/block/by-name/nvcfg /mnt/vendor/nvcfg ext4 rw wait,check,formattable
+/dev/block/by-name/persist /mnt/vendor/persist ext4 rw wait,check,formattable
 
-# Boot-critical partitions (para flasheo)
+# Particiones críticas de arranque
 /dev/block/by-name/boot /boot emmc defaults defaults
 /dev/block/by-name/vendor_boot /vendor_boot emmc defaults defaults
 /dev/block/by-name/dtbo /dtbo emmc defaults defaults
@@ -28,6 +28,6 @@
 /dev/block/by-name/proinfo /proinfo emmc defaults defaults
 /dev/block/by-name/seccfg /seccfg emmc defaults defaults
 
-# External storage
+# Almacenamiento externo
 /devices/platform/soc/11240000.mmc* auto auto defaults voldmanaged=sdcard1:auto
 /devices/platform/soc/mt_usb* auto vfat defaults voldmanaged=usbotg:auto
