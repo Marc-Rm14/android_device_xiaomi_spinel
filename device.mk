@@ -1,8 +1,9 @@
 LOCAL_PATH := $(call my-dir)
 
-ifeq ($(TARGET_DEVICE),spinel)
-include $(call all-makefiles-under,$(LOCAL_PATH))
-endif
+# Dynamic
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+
+ENABLE_VIRTUAL_AB := true
 
 # Paquetes críticos de MTK para recovery
 PRODUCT_PACKAGES += \
