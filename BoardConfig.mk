@@ -24,6 +24,11 @@ TARGET_SUPPORTS_64_BIT_APPS := true
 TARGET_BOARD_PLATFORM := mt6789
 TARGET_BOOTLOADER_BOARD_NAME := spinel
 TARGET_NO_BOOTLOADER := true
+TARGET_USES_UEFI := true
+
+BOARD_HAS_MTK_HARDWARE := true
+BOARD_USES_MTK_HARDWARE := true
+MTK_HARDWARE := true
 
 # ======================
 # Kernel (header v4 para Android 16 GKI)
@@ -165,13 +170,13 @@ TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
 # Recovery ramdisk en vendor_boot
 # ======================
 
-BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+# BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
 BOARD_KERNEL_SEPARATED_DTBO := true
 BOARD_VNDK_VERSION := current
 TARGET_NO_KERNEL := true
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 TARGET_NO_RECOVERY := true
-TARGET_ROOT_OUT := $(TARGET_OUT)/recovery/root
 
 # ======================
 # Flags críticos para MT6789 + vendor_boot
