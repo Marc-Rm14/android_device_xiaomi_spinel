@@ -57,3 +57,8 @@ export OF_DONT_PATCH_ENCRYPTED_DEVICE=1
 export OF_ENABLE_LPTOOLS=1
 export OF_UNMOUNT_SYSTEM=1
 export FOX_ADD_API_V36_PREBUILTS=1
+
+# Magisk moderno (reemplaza el patch obsoleto del Action Builder)
+export OF_USE_MAGISKBOOT=1
+export OF_USE_MAGISKBOOT_FOR_ALL_PATCHES=1
+export FOX_USE_UPDATED_MAGISKBOOT=1
