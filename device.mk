@@ -1,4 +1,10 @@
-LOCAL_PATH := $(call my-dir)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
+
+# Enable project quotas and casefolding for emulated storage without sdcardfs
+$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+
+LOCAL_PATH := device/xiaomi/spinel
 
 # Dynamic
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
