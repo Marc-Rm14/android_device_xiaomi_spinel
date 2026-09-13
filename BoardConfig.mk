@@ -159,7 +159,6 @@ BOARD_AVB_ENABLE := true
 # Kernel image name (GKI ARM64)
 # BOARD_KERNEL_IMAGE_NAME := Image
 
-BOARD_BOOTCONFIG := $(DEVICE_PATH)/bootconfig
 
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
 # TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image
@@ -211,3 +210,10 @@ PLATFORM_VERSION := 99.87.36
 PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
 VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
+
+# ======================
+# Bootconfig (RCU tunings MT6789)
+# ======================
+BOARD_BOOTCONFIG += kernel.rcu_nocbs=all
+BOARD_BOOTCONFIG += kernel.rcutree.enable_rcu_lazy=1
+BOARD_BOOTCONFIG += kernel.rcupdate.rcu_cpu_stall_cputime=1
