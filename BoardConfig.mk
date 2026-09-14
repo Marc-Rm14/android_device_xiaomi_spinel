@@ -217,3 +217,4 @@ BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 BOARD_BOOTCONFIG += kernel.rcu_nocbs=all
 BOARD_BOOTCONFIG += kernel.rcutree.enable_rcu_lazy=1
 BOARD_BOOTCONFIG += kernel.rcupdate.rcu_cpu_stall_cputime=1
+TW_USE_LEGACY_BATTERY_SERVICES := true
