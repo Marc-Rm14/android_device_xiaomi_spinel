@@ -168,3 +168,6 @@ perf_helper.ko
 perfhelper.ko
 simtray.ko
 io_monitor.ko
+tp_get_lcd_name.ko
+xiaomi_touch.ko
+gt9916k.ko
