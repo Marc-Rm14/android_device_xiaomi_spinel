@@ -168,5 +168,3 @@ perf_helper.ko
 perfhelper.ko
 simtray.ko
 io_monitor.ko
-mi_schedule.ko
-metis.ko
