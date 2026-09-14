@@ -179,9 +179,9 @@
 /dev/dma_heap/mtk_sapu_engine_shm_region            0444   system     system
 /dev/dma_heap/mtk_sapu_engine_shm_region-aligned    0444   system     system
 
-#touch
-/dev/touch                0660   root       system
-/dev/hotknot              0660   root       system
+#touch (spinel - xiaomi touch)
+/dev/xiaomi-touch         0666   system     system
+/dev/xiaomi-touch-knock   0664   system     system
 
 #hang_detect
 /dev/RT_Monitor           0660   system     system

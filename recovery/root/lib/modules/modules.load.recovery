@@ -170,4 +170,5 @@ simtray.ko
 io_monitor.ko
 tp_get_lcd_name.ko
 xiaomi_touch.ko
+ft3683g.ko
 gt9916k.ko
