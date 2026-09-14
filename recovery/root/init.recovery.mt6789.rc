@@ -12,3 +12,7 @@ on fs && property:ro.debuggable=0
     start adbd
 
 on boot
+    chown system system /dev/xiaomi-touch
+    chmod 0664 /dev/xiaomi-touch
+    chown system system /sys/class/touch/tp_dev/fod_status
+    chmod 0664 /sys/class/touch/tp_dev/fod_status
