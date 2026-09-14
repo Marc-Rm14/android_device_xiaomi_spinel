@@ -217,6 +217,3 @@ BOARD_BOOTCONFIG += kernel.rcu_nocbs=all
 BOARD_BOOTCONFIG += kernel.rcutree.enable_rcu_lazy=1
 BOARD_BOOTCONFIG += kernel.rcupdate.rcu_cpu_stall_cputime=1
 TW_USE_LEGACY_BATTERY_SERVICES := true
-
-# Touch sync - Goodix GT9916K
-TW_USE_KEY_CODE_TOUCH_SYNC := 330
