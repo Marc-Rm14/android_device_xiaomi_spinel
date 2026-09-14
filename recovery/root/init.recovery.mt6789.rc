@@ -18,3 +18,13 @@ on boot
     chmod 0664 /dev/xiaomi-touch-knock
     chown system system /sys/class/touch/tp_dev/fod_status
     chmod 0664 /sys/class/touch/tp_dev/fod_status
+
+# Touch feature HAL (userspace touch framework)
+service touchfeature-service /vendor/bin/hw/vendor.xiaomi.hw.touchfeature-service
+    interface aidl vendor.xiaomi.hw.touchfeature.ITouchFeature/default
+    class hal
+    user system
+    group system system input
+    capabilities SYS_NICE
+    ioprio rt 4
+    seclabel u:r:recovery:s0
