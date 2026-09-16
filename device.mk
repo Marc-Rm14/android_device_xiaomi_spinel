@@ -1,16 +1,21 @@
-$(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
-
 LOCAL_PATH := device/xiaomi/spinel
 
-PRODUCT_USE_DYNAMIC_PARTITIONS := true
+$(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 
-ENABLE_VIRTUAL_AB := true
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
+
+$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
+
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
 
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+ENABLE_VIRTUAL_AB := true
+
 PRODUCT_PACKAGES += \
-    android.hardware.boot@1.2-mtkimpl
+    android.hardware.boot@1.2-mtkimpl \
+    android.hardware.boot@1.2-mtkimpl.recovery
 
 TARGET_RECOVERY_DEVICE_MODULES += \
     libion \
