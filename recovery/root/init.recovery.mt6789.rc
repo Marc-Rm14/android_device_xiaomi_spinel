@@ -9,8 +9,14 @@ on init
     insmod /lib/modules/xiaomi_touch.ko
     insmod /lib/modules/gt9916k.ko
 
-on fs && property:ro.debuggable=0
-    start adbd
+on early-fs
+    start vold
+
+on fs
+    install_keyring
+    mount_all fstab.mt6789
+    property:ro.debuggable=0
+        start adbd
 
 on property:ro.crypto.state=unsupported
     stop keymint-mitee
@@ -24,11 +30,11 @@ on property:ro.crypto.state=unencrypted
     stop tee-supplicant
     stop miteelog
 
-on property:crypto.ready=0
-    stop keymint-mitee
-    stop vendor.gatekeeper-1-0
-    stop tee-supplicant
-    stop miteelog
+on property:ro.crypto.state=encrypted
+    start keymint-mitee
+    start vendor.gatekeeper-1-0
+    start tee-supplicant
+    start miteelog
 
 on property:twrp.decrypt.done=true
     stop keymint-mitee
