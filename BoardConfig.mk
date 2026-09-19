@@ -154,7 +154,7 @@ TW_EXCLUDE_TWRPAPP := true
 
 
 # AVB (minimal, como transsion mt6789-common)
-BOARD_AVB_ENABLE := true
+BOARD_AVB_ENABLE := false
 
 # Kernel image name (GKI ARM64)
 # BOARD_KERNEL_IMAGE_NAME := Image
