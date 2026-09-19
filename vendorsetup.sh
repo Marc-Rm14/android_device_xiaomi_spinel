@@ -61,4 +61,4 @@ export FOX_DELETE_AROMAFM=1
 export FOX_DELETE_MAGISK_ADDON=1
 export FOX_DELETE_INITD_ADDON=1
 # export FOX_ADD_API_V36_PREBUILTS=1
-export FOX_REFERENCE_VENDOR_BOOT_IMAGE=$(gettop)/device/xiaomi/mydevice/data/stock-vendor_boot.img
+export FOX_REFERENCE_VENDOR_BOOT_IMAGE=$(gettop)/device/xiaomi/spinel/data/stock-vendor_boot.img
