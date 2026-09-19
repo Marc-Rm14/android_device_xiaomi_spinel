@@ -1,5 +1,4 @@
 on init
-    setprop crypto.ready 1
     setprop sys.usb.configfs 1
     setprop sys.usb.controller "musb-hdrc"
     setprop sys.usb.ffs.aio_compat 1
@@ -16,6 +15,7 @@ on fs
     mount_all /first_stage_ramdisk/fstab.mt6789 --late
     setprop vendor.teefs_state ready
     setprop ro.hardware.gatekeeper mitee
+    setprop crypto.ready 1
 
 on property:ro.crypto.state=unsupported
     stop keymint-mitee
@@ -43,6 +43,7 @@ on property:twrp.decrypt.done=true
 
 on boot
     setprop sys.usb.config adb
+    start adbd
     chown system system /dev/xiaomi-touch
     chmod 0664 /dev/xiaomi-touch
     chown system system /sys/class/touch/tp_dev/fod_status
