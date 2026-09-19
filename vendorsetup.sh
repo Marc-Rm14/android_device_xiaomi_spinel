@@ -27,7 +27,7 @@
 # ======================
 
 # A/B device (punto E de la doc)
-export FOX_AB_DEVICE=1
+# export FOX_AB_DEVICE=1
 
 # Virtual A/B device (punto F de la doc)
 export FOX_VIRTUAL_AB_DEVICE=1
@@ -35,7 +35,7 @@ export FOX_VIRTUAL_AB_DEVICE=1
 # Recovery va en vendor_boot
 export FOX_VENDOR_BOOT_RECOVERY=1
 
-export FOX_RECOVERY_VENDOR_BOOT_PARTITION="/dev/block/by-name/vendor_boot"
+# export FOX_RECOVERY_VENDOR_BOOT_PARTITION="/dev/block/by-name/vendor_boot"
 # export FOX_RECOVERY_SYSTEM_PARTITION="/dev/block/mapper/system"
 # export FOX_RECOVERY_VENDOR_PARTITION="/dev/block/mapper/vendor"
 
@@ -54,9 +54,11 @@ export OF_STATUS_INDENT_LEFT=48
 export OF_STATUS_INDENT_RIGHT=48
 export OF_HIDE_NOTCH=1
 export OF_ALLOW_DISABLE_NAVBAR=1
-export OF_USE_MAGISKBOOT=1
-export OF_USE_MAGISKBOOT_FOR_ALL_PATCHES=1
 export FOX_USE_UPDATED_MAGISKBOOT=1
 export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
-export OF_ENABLE_LPTOOLS=1
-export FOX_ADD_API_V36_PREBUILTS=1
+#export OF_ENABLE_LPTOOLS=1
+export FOX_DELETE_AROMAFM=1
+export FOX_DELETE_MAGISK_ADDON=1
+export FOX_DELETE_INITD_ADDON=1
+# export FOX_ADD_API_V36_PREBUILTS=1
+export FOX_REFERENCE_VENDOR_BOOT_IMAGE=$(gettop)/device/xiaomi/mydevice/data/stock-vendor_boot.img
