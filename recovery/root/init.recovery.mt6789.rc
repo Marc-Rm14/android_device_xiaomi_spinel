@@ -43,7 +43,6 @@ on property:twrp.decrypt.done=true
 
 on boot
     setprop sys.usb.config adb
-    start adbd
     chown system system /dev/xiaomi-touch
     chmod 0664 /dev/xiaomi-touch
     chown system system /sys/class/touch/tp_dev/fod_status
