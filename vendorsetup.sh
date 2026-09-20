@@ -27,7 +27,7 @@
 # ======================
 
 # A/B device (punto E de la doc)
-# export FOX_AB_DEVICE=1
+export FOX_AB_DEVICE=1
 
 # Virtual A/B device (punto F de la doc)
 export FOX_VIRTUAL_AB_DEVICE=1
