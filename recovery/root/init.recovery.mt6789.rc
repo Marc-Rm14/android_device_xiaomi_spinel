@@ -13,33 +13,6 @@ on early-fs
 
 on fs
     mount_all /first_stage_ramdisk/fstab.mt6789 --late
-    setprop vendor.teefs_state ready
-    setprop ro.hardware.gatekeeper mitee
-    setprop crypto.ready 1
-
-on property:ro.crypto.state=unsupported
-    stop keymint-mitee
-    stop vendor.gatekeeper-1-0
-    stop tee-supplicant
-    stop miteelog
-
-on property:ro.crypto.state=unencrypted
-    stop keymint-mitee
-    stop vendor.gatekeeper-1-0
-    stop tee-supplicant
-    stop miteelog
-
-on property:ro.crypto.state=encrypted
-    start keymint-mitee
-    start vendor.gatekeeper-1-0
-    start tee-supplicant
-    start miteelog
-
-on property:twrp.decrypt.done=true
-    stop keymint-mitee
-    stop vendor.gatekeeper-1-0
-    stop tee-supplicant
-    stop miteelog
 
 on boot
     setprop sys.usb.config adb

@@ -148,6 +148,7 @@ TW_INCLUDE_NTFS_3G := true
 TW_USE_NEW_MINADBD := true
 TW_MAX_BRIGHTNESS := 2047
 TW_DEFAULT_BRIGHTNESS := 1200
+TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
 TW_HAS_MTP := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_EXCLUDE_TWRPAPP := true
@@ -175,7 +176,7 @@ TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
 # Recovery ramdisk en vendor_boot
 # ======================
 
-BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+# BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
 BOARD_KERNEL_SEPARATED_DTBO := true
 BOARD_VNDK_VERSION := current
 TARGET_NO_KERNEL := true
@@ -189,7 +190,6 @@ TW_LOAD_VENDOR_BOOT_MODULES := true
 BOARD_RAMDISK_USE_LZ4 := true
 BOARD_HAS_LARGE_FILESYSTEM := true
 
-# Build workarounds para LineageOS 21+
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 ALLOW_MISSING_DEPENDENCIES := true
@@ -207,7 +207,11 @@ TW_INCLUDE_LPTOOLS := true
 
 # Reducción de tamaño
 TW_EXCLUDE_APEX := true
-TW_EXCLUDE_LPDUMP := true
+
+
+# Debug-tools
+TWRP_INCLUDE_LOGCAT := true
+TARGET_USES_LOGD := true
 
 # ======================
 # Hack de versión (compatible con cualquier ROM)
@@ -225,3 +229,4 @@ BOARD_BOOTCONFIG += kernel.rcu_nocbs=all
 BOARD_BOOTCONFIG += kernel.rcutree.enable_rcu_lazy=1
 BOARD_BOOTCONFIG += kernel.rcupdate.rcu_cpu_stall_cputime=1
 TW_USE_LEGACY_BATTERY_SERVICES := true
+TW_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID := true
