@@ -176,7 +176,7 @@ TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
 # Recovery ramdisk en vendor_boot
 # ======================
 
-# BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
 BOARD_KERNEL_SEPARATED_DTBO := true
 BOARD_VNDK_VERSION := current
 TARGET_NO_KERNEL := true
