@@ -1,2 +1,2 @@
-FOX_RECOVERY_VENDOR_BOOT_PARTITION="/dev/block/by-name/vendor_boot"
+# FOX_RECOVERY_VENDOR_BOOT_PARTITION="/dev/block/by-name/vendor_boot"
 OF_USE_LZ4_COMPRESSION := 1
