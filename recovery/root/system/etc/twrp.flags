@@ -1,0 +1,83 @@
+# Android fstab / twrp.flags para MediaTek MT6789
+# Configuración para TWRP / OrangeFox Recovery
+
+# =============================================================================
+# Datos y Caché
+# =============================================================================
+/metadata           ext4      /dev/block/by-name/metadata                                 flags=display="Metadata";backup=1
+/data               f2fs      /dev/block/by-name/userdata                                 flags=fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized,keydirectory=/metadata/vold/metadata_encryption
+/cache              ext4      /dev/block/by-name/rescue                                   flags=display="Cache";wipeingui;wipeduringfactoryreset
+
+# =============================================================================
+# Boot, Kernel y Verificación
+# =============================================================================
+/boot               emmc      /dev/block/by-name/boot                                     flags=display="Boot";slotselect;backup=1;flashimg=1
+/vendor_boot        emmc      /dev/block/by-name/vendor_boot                              flags=display="Vendor Boot";slotselect;backup=1;flashimg=1
+/init_boot          emmc      /dev/block/by-name/init_boot                                flags=display="Init Boot";backup=1;flashimg=1
+/dtbo               emmc      /dev/block/by-name/dtbo                                     flags=display="DTBO";backup=1;flashimg=1
+/vbmeta             emmc      /dev/block/by-name/vbmeta                                   flags=display="VBMeta";slotselect;backup=1;flashimg=1
+/vbmeta_system      emmc      /dev/block/by-name/vbmeta_system                            flags=display="VBMeta System";slotselect;backup=1;flashimg=1
+/vbmeta_vendor      emmc      /dev/block/by-name/vbmeta_vendor                            flags=display="VBMeta Vendor";slotselect;backup=1;flashimg=1
+/misc               emmc      /dev/block/by-name/misc                                     flags=display="Misc";backup=1
+/logo               emmc      /dev/block/by-name/logo                                     flags=display="Logo";backup=1;flashimg=1
+
+# =============================================================================
+# Calibración, IMEI, NVRAM y Persistencia
+# =============================================================================
+/persist            ext4      /dev/block/by-name/persist                                  flags=display="Persist";fsflags=ro,noload
+/persist_image      emmc      /dev/block/by-name/persist                                  flags=display="Persist Image";backup=1;flashimg=1
+/protect_f          ext4      /dev/block/by-name/protect1                                 flags=display="Protect F";backup=1
+/protect_s          ext4      /dev/block/by-name/protect2                                 flags=display="Protect S";backup=1
+/nvdata             ext4      /dev/block/by-name/nvdata                                   flags=display="NVData";backup=1
+/nvcfg              ext4      /dev/block/by-name/nvcfg                                    flags=display="NVCfg";backup=1
+/nvram              emmc      /dev/block/by-name/nvram                                    flags=display="NVRAM";backup=1
+/proinfo            emmc      /dev/block/by-name/proinfo                                  flags=display="Proinfo";backup=1
+/persistent         emmc      /dev/block/by-name/frp                                      flags=display="FRP / Persistent";backup=1
+
+# =============================================================================
+# Firmware de Microcontroladores y Radio (MTK)
+# =============================================================================
+/para               emmc      /dev/block/by-name/para                                     flags=display="Para"
+/bootloader         emmc      /dev/block/by-name/lk                                       flags=display="LK Bootloader";backup=1
+/bootloader2        emmc      /dev/block/by-name/lk2                                      flags=display="LK2 Bootloader";backup=1
+/expdb              emmc      /dev/block/by-name/expdb                                    flags=display="EXPDB"
+/seccfg             emmc      /dev/block/by-name/seccfg                                   flags=display="SecCFG"
+/tee1               emmc      /dev/block/by-name/tee1                                     flags=display="TEE1"
+/tee2               emmc      /dev/block/by-name/tee2                                     flags=display="TEE2"
+/scp1               emmc      /dev/block/by-name/scp1                                     flags=display="SCP1"
+/scp2               emmc      /dev/block/by-name/scp2                                     flags=display="SCP2"
+/sspm1              emmc      /dev/block/by-name/sspm1                                    flags=display="SSPM1"
+/sspm2              emmc      /dev/block/by-name/sspm2                                    flags=display="SSPM2"
+/dpm1               emmc      /dev/block/by-name/dpm1                                     flags=display="DPM1"
+/dpm2               emmc      /dev/block/by-name/dpm2                                     flags=display="DPM2"
+/mcupm1             emmc      /dev/block/by-name/mcupm1                                   flags=display="MCUPM1"
+/mcupm2             emmc      /dev/block/by-name/mcupm2                                   flags=display="MCUPM2"
+/md1img             emmc      /dev/block/by-name/md1img                                   flags=display="Modem (md1img)";backup=1
+/md1dsp             emmc      /dev/block/by-name/md1dsp                                   flags=display="Modem DSP"
+/md1arm7            emmc      /dev/block/by-name/md1arm7                                  flags=display="Modem ARM7"
+/md3img             emmc      /dev/block/by-name/md3img                                   flags=display="Modem md3img"
+/gz1                emmc      /dev/block/by-name/gz1                                      flags=display="GZ1"
+/gz2                emmc      /dev/block/by-name/gz2                                      flags=display="GZ2"
+/spmfw              emmc      /dev/block/by-name/spmfw                                    flags=display="SPMFW"
+/pi_img             emmc      /dev/block/by-name/pi_img                                   flags=display="PI Image"
+/boot_para          emmc      /dev/block/by-name/boot_para                                flags=display="Boot Para"
+/odmdtbo            emmc      /dev/block/by-name/odmdtbo                                  flags=display="ODM DTBO"
+/otp                emmc      /dev/block/by-name/otp                                      flags=display="OTP"
+
+# =============================================================================
+# Almacenamiento Removible
+# =============================================================================
+/external_sd        auto      /dev/block/mmcblk1p1        /dev/block/mmcblk1              flags=display="Micro SDcard";storage;wipeingui;removable
+/usb_otg            auto      /dev/block/sda1             /dev/block/sda /dev/block/sdd1  flags=display="USB OTG";storage;wipeingui;removable
+
+# =============================================================================
+# Imágenes Mapeadas (Flasheables dentro del Super / Lógicas)
+# =============================================================================
+/system_image       emmc      /dev/block/mapper/system                                    flags=display="System Image";slotselect;backup=1;flashimg=1
+/vendor_image       emmc      /dev/block/mapper/vendor                                    flags=display="Vendor Image";slotselect;backup=1;flashimg=1
+/system_ext_image   emmc      /dev/block/mapper/system_ext                                flags=display="System_EXT Image";slotselect;backup=1;flashimg=1
+/product_image      emmc      /dev/block/mapper/product                                   flags=display="Product Image";slotselect;backup=1;flashimg=1
+/vendor_dlkm_image  emmc      /dev/block/mapper/vendor_dlkm                               flags=display="Vendor DLKM Image";slotselect;backup=1;flashimg=1
+/odm_dlkm_image     emmc      /dev/block/mapper/odm_dlkm                                 flags=display="ODM DLKM Image";slotselect;backup=1;flashimg=1
+/system_dlkm_image  emmc      /dev/block/mapper/system_dlkm                               flags=display="System DLKM Image";slotselect;backup=1;flashimg=1
+/mi_ext_image       emmc      /dev/block/mapper/mi_ext                                    flags=display="MI EXT Image";slotselect;backup=1;flashimg=1
