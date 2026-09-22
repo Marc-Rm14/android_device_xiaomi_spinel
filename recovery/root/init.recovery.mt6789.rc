@@ -3,8 +3,8 @@ on init
     setprop sys.usb.controller "musb-hdrc"
     setprop sys.usb.ffs.aio_compat 1
 
-    insmod /lib/modules/touch_boost.ko
-    insmod /lib/modules/mtk_ioctl_touch_boost.ko
+    # insmod /lib/modules/touch_boost.ko
+    # insmod /lib/modules/mtk_ioctl_touch_boost.ko
     insmod /lib/modules/xiaomi_touch.ko
     insmod /lib/modules/gt9916k.ko
 
