@@ -130,6 +130,7 @@ AB_OTA_PARTITIONS += \
 # ======================
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
+TARGET_USERIMAGES_USE_EROFS := true
 TARGET_USES_MKE2FS := true
 
 # ======================
