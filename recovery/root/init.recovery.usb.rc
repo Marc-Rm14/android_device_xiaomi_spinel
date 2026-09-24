@@ -43,14 +43,6 @@ on fs
     setprop sys.usb.mtp.device_type 3
     setprop sys.usb.configfs 1
 
-# Enlace dinámico del controlador USB
-on property:ro.boot.usbcontroller=*
-    setprop sys.usb.controller ${ro.boot.usbcontroller}
-
-# Alternativa en caso de que el bootloader no pase el controlador (típico en MT6789)
-on property:sys.usb.controller=none
-    setprop sys.usb.controller musb-hdrc
-
 on property:sys.usb.config=none && property:sys.usb.configfs=1
     write /config/usb_gadget/g1/UDC "none"
     stop adbd

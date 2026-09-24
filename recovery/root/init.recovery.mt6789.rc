@@ -1,7 +1,7 @@
 on init
     setprop sys.usb.configfs 1
     setprop sys.usb.controller "musb-hdrc"
-    setprop sys.usb.ffs.aio_compat 1
+    setprop sys.usb.ffs.aio_compat 0
 
     # insmod /lib/modules/touch_boost.ko
     # insmod /lib/modules/mtk_ioctl_touch_boost.ko
@@ -9,7 +9,7 @@ on init
     insmod /lib/modules/gt9916k.ko
 
 on early-fs
-    start vold
+    # start vold
 
 on fs
     # mount_all /first_stage_ramdisk/fstab.mt6789 --late
