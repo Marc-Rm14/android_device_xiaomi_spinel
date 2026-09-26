@@ -8,18 +8,12 @@ on init
     insmod /lib/modules/xiaomi_touch.ko
     insmod /lib/modules/gt9916k.ko
 
-on early-fs
-    # start vold
-
-on fs
-    # mount_all /first_stage_ramdisk/fstab.mt6789 --late
-
 on boot
     start boot-hal-1-2
     start health-hal-2-1
 
     setprop sys.usb.config adb
-    chown system system /dev/xiaomi-touch
-    chmod 0664 /dev/xiaomi-touch
-    chown system system /sys/class/touch/tp_dev/fod_status
-    chmod 0664 /sys/class/touch/tp_dev/fod_status
+    # chown system system /dev/xiaomi-touch
+    # chmod 0664 /dev/xiaomi-touch
+    # chown system system /sys/class/touch/tp_dev/fod_status
+    # chmod 0664 /sys/class/touch/tp_dev/fod_status
