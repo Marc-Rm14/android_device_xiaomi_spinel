@@ -1,11 +1,6 @@
 on early-init
     write /sys/module/musb_hdrc/parameters/kernel_init_done 1
 
-on init
-    setprop sys.usb.configfs 1
-    setprop sys.usb.controller "musb-hdrc"
-    setprop vendor.usb.controller "musb-hdrc"
-
 on fs
     mkdir /config/usb_gadget/g1 0770 shell shell
     write /config/usb_gadget/g1/idVendor 0x18D1
@@ -41,6 +36,23 @@ on fs
 
     mkdir /dev/usb-ffs/fastboot 0770 system system
     mount functionfs fastboot /dev/usb-ffs/fastboot rmode=0770,fmode=0660,uid=1000,gid=1000,no_disconnect=1
+
+on boot
+    setprop sys.usb.configfs 1
+    setprop sys.usb.controller "musb-hdrc"
+    setprop vendor.usb.controller "musb-hdrc"
+    setprop sys.usb.ffs.aio_compat 0
+    setprop vendor.usb.acm_cnt 0
+    setprop vendor.usb.acm_port0 ""
+    setprop vendor.usb.acm_port1 ""
+    setprop vendor.usb.acm_enable 0
+    write /sys/class/android_usb/android0/f_mtp/cpu_mask 0x80
+    write /sys/module/usb_f_mtp/parameters/mtp_rx_cont 1
+    chmod 0664 /sys/class/android_usb/android0/iSerial
+    chown root system /sys/class/android_usb/android0/iSerial
+
+    # for usb otg sdcard hot plug detection
+    write /sys/module/block/parameters/events_dfl_poll_msecs 1000
 
 on property:sys.usb.config=none && property:sys.usb.configfs=1
     write /config/usb_gadget/g1/UDC "none"
