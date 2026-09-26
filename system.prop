@@ -1,0 +1,8 @@
+# Dynamic Partitions
+ro.boot.dynamic_partitions=true
+
+# USB MTP
+ro.sys.usb.storage.type=mtp
+
+# Platform
+ro.vendor.mediatek.platform=MT6789
