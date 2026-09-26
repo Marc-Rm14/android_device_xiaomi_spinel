@@ -61,6 +61,7 @@ TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 
 
+TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 # ======================
 # Assert
 # ======================
