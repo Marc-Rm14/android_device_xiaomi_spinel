@@ -8,11 +8,10 @@ on init
     insmod /lib/modules/xiaomi_touch.ko
     insmod /lib/modules/gt9916k.ko
 
-on early-fs
-    # start vold
+    setprop vendor.all.modules.ready 1
 
-on fs
-    # mount_all /first_stage_ramdisk/fstab.mt6789 --late
+on fs && property:ro.debuggable=0
+    start adbd
 
 on boot
     start boot-hal-1-2

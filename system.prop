@@ -6,3 +6,8 @@ ro.sys.usb.storage.type=mtp
 
 # Platform
 ro.vendor.mediatek.platform=MT6789
+
+# SD
+external_storage.projid.enabled=1
+external_storage.casefold.enabled=1
+external_storage.sdcardfs.enabled=0
