@@ -1,7 +1,7 @@
 on init
     setprop sys.usb.configfs 1
     setprop sys.usb.controller "musb-hdrc"
-    setprop sys.usb.ffs.aio_compat 0
+    setprop sys.usb.ffs.aio_compat 1
 
     # insmod /lib/modules/touch_boost.ko
     # insmod /lib/modules/mtk_ioctl_touch_boost.ko
