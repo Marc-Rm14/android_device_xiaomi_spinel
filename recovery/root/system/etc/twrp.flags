@@ -67,8 +67,8 @@
 # =============================================================================
 # Almacenamiento Removible
 # =============================================================================
-/external_sd        auto      /dev/block/mmcblk0p1        /dev/block/mmcblk0              flags=display="Micro SDcard";storage;wipeingui;removable
-/usb_otg            auto      /dev/block/sda1             /dev/block/sda /dev/block/sdd1  flags=display="USB OTG";storage;wipeingui;removable
+/external_sd   auto   /dev/block/mmcblk0p1   /dev/block/mmcblk0   flags=display="Micro SD Card";storage;wipeingui;removable
+/usb_otg       auto   /dev/block/sdd1        /dev/block/sdd       flags=display="USB OTG";storage;wipeingui;removable
 
 # =============================================================================
 # Imágenes Mapeadas (Flasheables dentro del Super / Lógicas)
