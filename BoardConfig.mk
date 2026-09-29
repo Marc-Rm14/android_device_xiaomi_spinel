@@ -234,8 +234,8 @@ BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 # ======================
 # Bootconfig (RCU tunings MT6789)
 # ======================
-BOARD_BOOTCONFIG += kernel.rcu_nocbs=all
-BOARD_BOOTCONFIG += kernel.rcutree.enable_rcu_lazy=1
-BOARD_BOOTCONFIG += kernel.rcupdate.rcu_cpu_stall_cputime=1
+# BOARD_BOOTCONFIG += kernel.rcu_nocbs=all
+# BOARD_BOOTCONFIG += kernel.rcutree.enable_rcu_lazy=1
+# BOARD_BOOTCONFIG += kernel.rcupdate.rcu_cpu_stall_cputime=1
 TW_USE_LEGACY_BATTERY_SERVICES := true
 TW_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID := true

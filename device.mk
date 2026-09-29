@@ -14,9 +14,8 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 ENABLE_VIRTUAL_AB := true
 
 PRODUCT_PACKAGES += \
-    android.hardware.boot@1.2-mtkimpl \
-    android.hardware.boot@1.2-mtkimpl.recovery \
     fastbootd \
+    libspinel_libcxx_compat
 
 PRODUCT_PACKAGES_DEBUG += \
     bootctrl
@@ -32,4 +31,9 @@ TARGET_RECOVERY_DEVICE_MODULES += \
 
 TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libsysutils.so
+    $(TARGET_OUT_SHARED_LIBRARIES)/libsysutils.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libspinel_libcxx_compat.so
+
+
+PRODUCT_PACKAGES -= \
+    android.hardware.boot@1.2-service

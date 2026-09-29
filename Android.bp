@@ -1,0 +1,19 @@
+// ----------------------------------------------------------------------------
+// Minimal libc++ shim: vendor HALs (keymint/gatekeeper) are prelinked against
+// __libcpp_verbose_abort from the NDK libc++, which is absent in the APEX-less
+// recovery environment. This library redirects that symbol to a fatal log +
+// abort(). Built with stl:none to avoid a circular dependency on the very STL
+// it patches. Preloaded via LD_PRELOAD by the TEE/Weaver services.
+// ----------------------------------------------------------------------------
+cc_library_shared {
+    name: "libspinel_libcxx_compat",
+    srcs: ["src/libcxx_compat/libcxx_compat.cpp"],
+    compile_multilib: "64",
+    recovery_available: true,
+    stl: "none",
+    shared_libs: ["liblog"],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+}

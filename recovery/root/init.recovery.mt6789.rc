@@ -1,3 +1,5 @@
+import /init.recovery.bootctl.rc
+
 on init
     setprop sys.usb.configfs 1
     setprop sys.usb.controller "musb-hdrc"
@@ -10,8 +12,8 @@ on init
 
     setprop vendor.all.modules.ready 1
 
-on fs && property:ro.debuggable=0
-    start adbd
+# on fs && property:ro.debuggable=0
+#    start adbd
 
 on boot
     start boot-hal-1-2
