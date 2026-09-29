@@ -15,7 +15,8 @@ ENABLE_VIRTUAL_AB := true
 
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-mtkimpl \
-    android.hardware.boot@1.2-mtkimpl.recovery
+    android.hardware.boot@1.2-mtkimpl.recovery \
+    fastbootd \
 
 PRODUCT_PACKAGES_DEBUG += \
     bootctrl
