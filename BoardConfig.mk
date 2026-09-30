@@ -4,6 +4,9 @@
 
 DEVICE_PATH := device/xiaomi/spinel
 
+
+BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
+
 # ======================
 # Architecture
 # ======================
