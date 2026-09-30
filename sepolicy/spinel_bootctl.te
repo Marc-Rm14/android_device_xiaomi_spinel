@@ -1,0 +1,12 @@
+type spinel_ufs_bootctl_device, dev_type;
+
+# Permiso para IOCTL sobre el dispositivo UFS BSG
+allow hal_bootctl_default self:capability sys_rawio;
+allow hal_bootctl_default spinel_ufs_bootctl_device:chr_file rw_file_perms;
+
+# Acceso a la partición física misc (sdc1)
+allow hal_bootctl_default misc_block_device:blk_file rw_file_perms;
+allow hal_bootctl_default block_device:dir search;
+
+# Modo permisivo para el HAL de Boot Control
+permissive hal_bootctl_default;
