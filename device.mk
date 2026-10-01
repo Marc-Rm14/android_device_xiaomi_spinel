@@ -17,8 +17,9 @@ PRODUCT_PACKAGES += \
     fastbootd \
     libspinel_libcxx_compat
 
-PRODUCT_PACKAGES += \
-    bootctrl
+PRODUCT_PACKAGES_DEBUG += \
+    bootctl \
+    logcat
 
 # Health
 PRODUCT_PACKAGES += \
