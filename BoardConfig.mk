@@ -143,7 +143,7 @@ TARGET_USES_MKE2FS := true
 # ======================
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
-TARGET_SCREEN_HEIGHT := 2400
+TARGET_SCREEN_HEIGHT := 2392
 TARGET_SCREEN_WIDTH := 1080
 TW_HAS_MTP := true
 TW_THEME := portrait_hdpi
@@ -157,11 +157,10 @@ TW_USE_NEW_MINADBD := true
 TW_MAX_BRIGHTNESS := 2048
 TW_DEFAULT_BRIGHTNESS := 1000
 TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
-TW_MTP_DEVICE := "/dev/mtp_usb"
-# TW_EXTERNAL_STORAGE_PATH := "/external_sd"
-# TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
+# TW_MTP_DEVICE := "/dev/mtp_usb"
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_EXCLUDE_TWRPAPP := true
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.usb0/lun.%d/file
 
 
 
