@@ -40,7 +40,7 @@ export FOX_VENDOR_BOOT_RECOVERY=1
 # export FOX_RECOVERY_VENDOR_PARTITION="/dev/block/mapper/vendor"
 
 # Keymaster version (punto J de la doc)
-export OF_DEFAULT_KEYMASTER_VERSION=4.1
+export OF_DEFAULT_KEYMASTER_VERSION=4.0
 
 # Device name
 export FOX_BUILD_DEVICE=spinel
@@ -49,7 +49,7 @@ export OF_FORCE_PREBUILT_KERNEL=1
 # Features
 export OF_USE_GREEN_LED=0
 export OF_FLASHLIGHT_ENABLE=0
-export OF_SCREEN_H=2400
+export OF_SCREEN_H=2392
 export OF_STATUS_H=90
 export OF_STATUS_INDENT_LEFT=48
 export OF_STATUS_INDENT_RIGHT=48
