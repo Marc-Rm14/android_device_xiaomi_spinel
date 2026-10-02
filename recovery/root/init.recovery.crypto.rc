@@ -1,0 +1,83 @@
+on fs
+    # 1. Crear punto de montaje y montar la partición persist (ext4 en sdc14)
+    mkdir /mnt/vendor/persist 0755 root root
+    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist ro noatime nosuid nodev wait noload
+
+    # 2. Permisos para nodos TEE y el controlador UFS (sdc)
+    chmod 0660 /dev/tee0
+    chmod 0660 /dev/teepriv0
+    chmod 0660 /dev/ufs-bsg0
+    chmod 0660 /dev/0:0:0:49476
+
+    chown system system /dev/tee0
+    chown system system /dev/teepriv0
+    chown system system /dev/ufs-bsg0
+    chown system system /dev/0:0:0:49476
+
+    # 3. Estado listo para miTEE
+    setprop vendor.teefs_state ready
+    setprop ro.hardware.gatekeeper mitee
+
+    # 4. Arreglo de carpetas de persist que miTEE requiere al inicializarse
+    mkdir /mnt/vendor/persist/data 0755 system system
+    mkdir /mnt/vendor/persist/fdsd 0755 system system
+
+    # 5. Iniciar la base del TEE
+    start miteelog
+    start tee-supplicant
+    start mrmd_mitee
+
+# 6. Arranque de KeyMint 4.0 y Gatekeeper AIDL al estar servicemanager listo
+on property:servicemanager.ready=true && property:init.svc.tee-supplicant=running
+    start vendor.keymint-mitee
+    start vendor.gatekeeper-mitee
+
+# --- Definición de Servicios ---
+
+service miteelog /vendor/bin/miteelog
+    class core
+    user system
+    group system
+    seclabel u:r:recovery:s0
+    disabled
+
+service tee-supplicant /vendor/bin/tee-supplicant
+    class core
+    user system
+    group system secure_element nfc
+    capabilities SYS_RAWIO
+    seclabel u:r:recovery:s0
+    disabled
+
+service mrmd_mitee /vendor/bin/mrmd_mitee
+    class core
+    user system
+    group system
+    seclabel u:r:recovery:s0
+    disabled
+
+service vendor.keymint-mitee /vendor/bin/hw/android.hardware.security.keymint@4.0-service.mitee
+    class early_hal
+    user system
+    group system drmrpc
+    setenv LD_LIBRARY_PATH /vendor/lib64:/system/lib64
+    setenv LD_PRELOAD /system/lib64/libspinel_libcxx_compat.so
+    seclabel u:r:recovery:s0
+    disabled
+
+service vendor.gatekeeper-mitee /vendor/bin/hw/android.hardware.gatekeeper-service.mitee
+    class hal
+    user system
+    group system
+    setenv LD_LIBRARY_PATH /vendor/lib64:/system/lib64
+    setenv LD_PRELOAD /system/lib64/libspinel_libcxx_compat.so
+    seclabel u:r:recovery:s0
+    disabled
+
+# --- Apagado tras descifrar en TWRP / OrangeFox ---
+on property:twrp.all.users.decrypted=true
+    stop vendor.keymint-mitee
+    stop vendor.gatekeeper-mitee
+    stop mrmd_mitee
+    stop tee-supplicant
+    stop miteelog

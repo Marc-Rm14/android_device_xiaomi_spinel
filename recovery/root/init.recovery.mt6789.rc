@@ -1,6 +1,8 @@
+import /init.recovery.crypto.rc
 import /init.recovery.bootctl.rc
 
 on init
+    export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
     setprop sys.usb.configfs 1
     setprop sys.usb.controller "musb-hdrc"
     setprop sys.usb.ffs.aio_compat 1
@@ -14,6 +16,34 @@ on init
 
 # on fs && property:ro.debuggable=0
 #    start adbd
+
+on fs
+    # Esperar el bus de almacenamiento UFS/eMMC y crear enlace estándar
+    wait /dev/block/platform/bootdevice
+    symlink /dev/block/platform/bootdevice /dev/block/bootdevice
+
+    # Inicializa el llavero del kernel antes de que FBE lo necesite
+    install_keyring
+
+on post-fs
+    # Utilidad de MediaTek para mapeo de particiones lógicas (necesario en Android 12+)
+    exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
+    start mtk.plpath.utils.link
+
+# Mapear preloaders cuando mtk_plpath_utils termine de escanear los mappers
+on property:persist.vendor.mtk.pl_lnk=1
+    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
+    symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
+
+service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
+    class main
+    user root
+    group root system
+    disabled
+    oneshot
+    seclabel u:r:recovery:s0
 
 on boot
     start boot-hal-1-2
