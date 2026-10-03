@@ -34,6 +34,10 @@ BOARD_HAS_MTK_HARDWARE := true
 BOARD_USES_MTK_HARDWARE := true
 MTK_HARDWARE := true
 
+TW_LOAD_VENDOR_BOOT_MODULES := true
+TW_LOAD_VENDOR_MODULES := "xiaomi_touch.ko gt9916k.ko"
+TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
+
 # ======================
 # Kernel (header v4 para Android 16 GKI)
 # ======================
@@ -150,10 +154,7 @@ TW_THEME := portrait_hdpi
 TW_EXTRA_LANGUAGES := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_FRAMERATE := 120
-TW_USE_TOOLBOX := true
 TW_INCLUDE_FASTBOOTD := true
-TW_INCLUDE_NTFS_3G := true
-TW_USE_NEW_MINADBD := true
 TW_MAX_BRIGHTNESS := 2048
 TW_DEFAULT_BRIGHTNESS := 1000
 TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
@@ -197,7 +198,6 @@ TARGET_NO_RECOVERY := true
 # ======================
 # Flags críticos para MT6789 + vendor_boot
 # ======================
-TW_LOAD_VENDOR_BOOT_MODULES := true
 BOARD_RAMDISK_USE_LZ4 := true
 BOARD_HAS_LARGE_FILESYSTEM := true
 
@@ -215,6 +215,8 @@ TW_USE_FSCRYPT_POLICY := 2
 TW_INCLUDE_REPACKTOOLS := true
 TW_INCLUDE_RESETPROP := true
 TW_INCLUDE_LPTOOLS := true
+TW_EXTRA_LANGUAGES := false
+TW_DEFAULT_LANGUAGE := es
 
 # Reducción de tamaño
 TW_EXCLUDE_APEX := true
