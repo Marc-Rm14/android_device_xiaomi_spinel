@@ -93,6 +93,10 @@ for name in "${upx_binaries[@]}"; do
         echo "missing selected UPX binary: $binary" >&2
         exit 1
     fi
+
+    if [ -L "$binary" ]; then
+        continue
+    fi
     chmod 0755 "$binary"
     "$upx_bin" -q --lzma "$binary" >/dev/null
     "$upx_bin" -q -t "$binary" >/dev/null
