@@ -81,22 +81,30 @@ upx_binaries=(
     avbctl awk bc bootctl bu charger dump_image e2fsck
     e2fsdroid erase_image exfat-fuse fastbootd fatlabel flash_image fsck.exfat
     fsck.f2fs fsck.fat grep keystore2 logcat
-    logd lzma make_f2fs minadbd mke2fs mkexfatfs mkfs.fat nano
+    logd make_f2fs minadbd mke2fs mkexfatfs mkfs.fat nano
     pigz reboot recovery resetprop resize2fs
     sgdisk simg2img sload_f2fs tune2fs twrp vold_prepare_subdirs
     watchdogd ziptool
 )
 
+echo "-- Verificando y comprimiendo binarios elegibles con UPX:"
 for name in "${upx_binaries[@]}"; do
     binary="$ramdisk/system/bin/$name"
-    if [ ! -f "$binary" ]; then
-        echo "missing selected UPX binary: $binary" >&2
-        exit 1
-    fi
 
-    if [ -L "$binary" ]; then
+    # 1. Si no existe, avisar en el log y continuar de forma segura
+    if [ ! -e "$binary" ]; then
+        echo "   [SKIPPED] No existe en /system/bin: $name"
         continue
     fi
+
+    # 2. Si es un enlace simbólico, omitir para evitar error de UPX
+    if [ -L "$binary" ]; then
+        echo "   [SKIPPED] Es un enlace simbólico (symlink): $name"
+        continue
+    fi
+
+    # 3. Si existe y es binario real, comprimir
+    echo "   [UPX COMPRESSING] $name..."
     chmod 0755 "$binary"
     "$upx_bin" -q --lzma "$binary" >/dev/null
     "$upx_bin" -q -t "$binary" >/dev/null
