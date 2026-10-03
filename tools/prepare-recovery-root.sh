@@ -66,7 +66,7 @@ fi
 while IFS= read -r -d '' binary; do
     if file "$binary" | grep -q ELF && \
             "$readelf_bin" -SW "$binary" 2>/dev/null | grep -q '\.gnu_debugdata'; then
-        "$objcopy_bin" --remove section=.gnu_debugdata "$binary"
+        "$objcopy_bin" --remove-section=.gnu_debugdata "$binary"
     fi
 done < <(find "$ramdisk/system" -type f -print0)
 
