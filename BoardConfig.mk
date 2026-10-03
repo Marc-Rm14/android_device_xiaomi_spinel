@@ -151,7 +151,6 @@ TARGET_SCREEN_HEIGHT := 2392
 TARGET_SCREEN_WIDTH := 1080
 TW_HAS_MTP := true
 TW_THEME := portrait_hdpi
-TW_EXTRA_LANGUAGES := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_FRAMERATE := 120
 TW_INCLUDE_FASTBOOTD := true
@@ -223,7 +222,6 @@ TW_DEFAULT_LANGUAGE := es
 
 # Reducción de tamaño
 TW_EXCLUDE_APEX := true
-
 
 # Debug-tools
 TWRP_INCLUDE_LOGCAT := true

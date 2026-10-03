@@ -27,12 +27,10 @@ PRODUCT_PACKAGES += \
     android.hardware.health@2.1-service
 
 TARGET_RECOVERY_DEVICE_MODULES += \
-    libion \
-    libsysutils
+    libion
 
 TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libsysutils.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libspinel_libcxx_compat.so
 
 
