@@ -25,6 +25,7 @@
 # ======================
 # OrangeFox build variables
 # ======================
+export ALLOW_MISSING_DEPENDENCIES=true
 
 # A/B device (punto E de la doc)
 export FOX_AB_DEVICE=1

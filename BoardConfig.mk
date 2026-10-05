@@ -34,6 +34,10 @@ BOARD_HAS_MTK_HARDWARE := true
 BOARD_USES_MTK_HARDWARE := true
 MTK_HARDWARE := true
 
+TW_LOAD_VENDOR_BOOT_MODULES := true
+TW_LOAD_VENDOR_MODULES := "xiaomi_touch.ko gt9916k.ko"
+TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
+
 # ======================
 # Kernel (header v4 para Android 16 GKI)
 # ======================
@@ -147,13 +151,9 @@ TARGET_SCREEN_HEIGHT := 2392
 TARGET_SCREEN_WIDTH := 1080
 TW_HAS_MTP := true
 TW_THEME := portrait_hdpi
-TW_EXTRA_LANGUAGES := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_FRAMERATE := 120
-TW_USE_TOOLBOX := true
 TW_INCLUDE_FASTBOOTD := true
-TW_INCLUDE_NTFS_3G := true
-TW_USE_NEW_MINADBD := true
 TW_MAX_BRIGHTNESS := 2048
 TW_DEFAULT_BRIGHTNESS := 1000
 TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
@@ -173,6 +173,9 @@ BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
 BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA4096
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 1
+
+# Preparar ramdisk
+BOARD_RECOVERY_IMAGE_PREPARE = bash $(DEVICE_PATH)/tools/prepare-recovery-root.sh $(TARGET_RECOVERY_ROOT_OUT) --first-call
 
 # Kernel image name (GKI ARM64)
 # BOARD_KERNEL_IMAGE_NAME := Image
@@ -197,7 +200,6 @@ TARGET_NO_RECOVERY := true
 # ======================
 # Flags críticos para MT6789 + vendor_boot
 # ======================
-TW_LOAD_VENDOR_BOOT_MODULES := true
 BOARD_RAMDISK_USE_LZ4 := true
 BOARD_HAS_LARGE_FILESYSTEM := true
 
@@ -206,19 +208,20 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 ALLOW_MISSING_DEPENDENCIES := true
 
 # Crypto (desencriptar /data)
-TW_INCLUDE_CRYPTO := false
-TW_INCLUDE_CRYPTO_FBE := false
-TW_INCLUDE_FBE_METADATA_DECRYPT := false
+TW_INCLUDE_CRYPTO := true
+TW_INCLUDE_CRYPTO_FBE := true
+TW_INCLUDE_FBE_METADATA_DECRYPT := true
 TW_USE_FSCRYPT_POLICY := 2
 
 # Herramientas útiles
 TW_INCLUDE_REPACKTOOLS := true
 TW_INCLUDE_RESETPROP := true
 TW_INCLUDE_LPTOOLS := true
+TW_EXTRA_LANGUAGES := false
+TW_DEFAULT_LANGUAGE := es
 
 # Reducción de tamaño
 TW_EXCLUDE_APEX := true
-
 
 # Debug-tools
 TWRP_INCLUDE_LOGCAT := true

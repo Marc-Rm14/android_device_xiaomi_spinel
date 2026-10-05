@@ -1,26 +1,131 @@
 import /init.recovery.bootctl.rc
+import /init.metee.rc
 
+# 1. TRIGGERS ESTÁNDAR (Orden Cronológico)
 on init
+    export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
     setprop sys.usb.configfs 1
     setprop sys.usb.controller "musb-hdrc"
     setprop sys.usb.ffs.aio_compat 1
+    setprop crypto.ready 1
 
-    # insmod /lib/modules/touch_boost.ko
-    # insmod /lib/modules/mtk_ioctl_touch_boost.ko
-    insmod /lib/modules/xiaomi_touch.ko
-    insmod /lib/modules/gt9916k.ko
+    # Symlinks para bootloader/lk
+    symlink /dev/block/by-name/lk1 /dev/block/by-name/bootloader1
+    symlink /dev/block/by-name/lk2 /dev/block/by-name/bootloader2
 
-    setprop vendor.all.modules.ready 1
+on fs
+    install_keyring
+    mkdir /persist 0771 root system
+    mount ext4 /dev/block/by-name/persist /persist noatime nosuid nodev
+    mkdir /persist/OFRP 0775 root system
 
-# on fs && property:ro.debuggable=0
-#    start adbd
+on early-boot
+    exec_start load-touch-modules
 
 on boot
     start boot-hal-1-2
     start health-hal-2-1
-
+    start mtk.plpath.utils.link
     setprop sys.usb.config adb
-    chown system system /dev/xiaomi-touch
-    chmod 0664 /dev/xiaomi-touch
-    chown system system /sys/class/touch/tp_dev/fod_status
-    chmod 0664 /sys/class/touch/tp_dev/fod_status
+
+# 2. TRIGGERS DE PROPIEDADES (Eventos)
+on property:hwservicemanager.ready=true
+    start vendor.gatekeeper_mitee
+    start vendor.keymint-mitee
+    start keymaster
+
+on property:vendor.sys.listener.registered=true
+    start vendor.gatekeeper_mitee
+    start vendor.keymint-mitee
+    start keymaster
+    start miteelog
+
+on property:ro.crypto.state=unsupported
+    stop vendor.keymint-mitee
+    stop vendor.gatekeeper_mitee
+    stop keymaster
+
+on property:ro.crypto.state=unencrypted
+    stop vendor.keymint-mitee
+    stop vendor.gatekeeper_mitee
+    stop keymaster
+
+on property:twrp.all.users.decrypted=true
+    stop vendor.keymint-mitee
+    stop vendor.gatekeeper_mitee
+    stop keymaster
+
+# Compatibilidad UFS/Symlinks MediaTek
+on property:persist.vendor.mtk.pl_lnk=1
+    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
+
+on property:vendor.mtk.boot_pl_a=1
+    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
+
+on property:vendor.mtk.boot_pl_b=1
+    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
+
+on property:vendor.mtk.boot_rot_boot_fmc_a=1
+    symlink /dev/block/mapper/rot_boot_fmc_a /dev/block/by-name/rot_boot_fmc_a
+
+on property:vendor.mtk.boot_rot_boot_fmc_b=1
+    symlink /dev/block/mapper/rot_boot_fmc_b /dev/block/by-name/rot_boot_fmc_b
+
+on property:vendor.mtk.boot_rot_boot_fw_a=1
+    symlink /dev/block/mapper/rot_boot_fw_a /dev/block/by-name/rot_boot_fw_a
+
+on property:vendor.mtk.boot_rot_boot_fw_b=1
+    symlink /dev/block/mapper/rot_boot_fw_b /dev/block/by-name/rot_boot_fw_b
+
+on property:vendor.mtk.boot0_linka=1
+    symlink /dev/block/sda /dev/block/mmcblk0boot0
+
+on property:vendor.mtk.boot0_linkb=1
+    symlink /dev/block/sdb /dev/block/mmcblk0boot0
+
+on property:vendor.mtk.boot0_linkc=1
+    symlink /dev/block/sdc /dev/block/mmcblk0boot0
+
+on property:vendor.mtk.boot1_linka=1
+    symlink /dev/block/sda /dev/block/mmcblk0boot1
+
+on property:vendor.mtk.boot1_linkb=1
+    symlink /dev/block/sdb /dev/block/mmcblk0boot1
+
+on property:vendor.mtk.boot1_linkc=1
+    symlink /dev/block/sdc /dev/block/mmcblk0boot1
+
+# 3. DEFINICIÓN DE SERVICIOS
+service load-touch-modules /sbin/sh /system/bin/load-touch-modules.sh
+    user root
+    group root
+    oneshot
+    disabled
+    seclabel u:r:recovery:s0
+
+service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
+    class main
+    user root
+    group root system
+    oneshot
+    disabled
+    seclabel u:r:recovery:s0
+
+service vendor.keymint-mitee /vendor/bin/hw/android.hardware.security.keymint@4.0-service.mitee
+    class early_hal
+    user system
+    group system drmrpc
+    setenv LD_LIBRARY_PATH /system/lib64
+    setenv LD_PRELOAD /system/lib64/libspinel_libcxx_compat.so
+    seclabel u:r:recovery:s0
+    disabled
+
+service vendor.gatekeeper_mitee /vendor/bin/hw/android.hardware.gatekeeper-service.mitee
+    class hal
+    user system
+    group system
+    setenv LD_LIBRARY_PATH /system/lib64
+    setenv LD_PRELOAD /system/lib64/libspinel_libcxx_compat.so
+    seclabel u:r:recovery:s0
+    disabled

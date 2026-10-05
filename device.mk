@@ -6,19 +6,24 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
 
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 ENABLE_VIRTUAL_AB := true
 
+# Keystore Hal
+PRODUCT_PACKAGES += \
+    android.system.keystore2
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.fuse.passthrough.enable=true
+
 PRODUCT_PACKAGES += \
     fastbootd \
     libspinel_libcxx_compat
 
 PRODUCT_PACKAGES_DEBUG += \
-    bootctl \
     logcat
 
 # Health
@@ -27,12 +32,10 @@ PRODUCT_PACKAGES += \
     android.hardware.health@2.1-service
 
 TARGET_RECOVERY_DEVICE_MODULES += \
-    libion \
-    libsysutils
+    libion
 
 TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libsysutils.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libspinel_libcxx_compat.so
 
 
