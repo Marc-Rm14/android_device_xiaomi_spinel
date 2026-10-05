@@ -32,28 +32,22 @@ on boot
 on property:hwservicemanager.ready=true
     start vendor.gatekeeper_mitee
     start vendor.keymint-mitee
-    start keymaster
 
 on property:vendor.sys.listener.registered=true
     start vendor.gatekeeper_mitee
     start vendor.keymint-mitee
-    start keymaster
-    start miteelog
 
 on property:ro.crypto.state=unsupported
     stop vendor.keymint-mitee
     stop vendor.gatekeeper_mitee
-    stop keymaster
 
 on property:ro.crypto.state=unencrypted
     stop vendor.keymint-mitee
     stop vendor.gatekeeper_mitee
-    stop keymaster
 
 on property:twrp.all.users.decrypted=true
     stop vendor.keymint-mitee
     stop vendor.gatekeeper_mitee
-    stop keymaster
 
 # Compatibilidad UFS/Symlinks MediaTek
 on property:persist.vendor.mtk.pl_lnk=1
