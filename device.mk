@@ -12,10 +12,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_ven
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 ENABLE_VIRTUAL_AB := true
 
-# Keystore Hal
-PRODUCT_PACKAGES += \
-    android.system.keystore2
-
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.fuse.passthrough.enable=true
 
