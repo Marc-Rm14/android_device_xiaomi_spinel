@@ -1,7 +1,7 @@
 import /init.recovery.bootctl.rc
 import /init.metee.rc
 
-# 1. TRIGGERS ESTÁNDAR (Orden Cronológico)
+# 1. TRIGGERS ESTÁNDAR
 on init
     export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
     setprop sys.usb.configfs 1
@@ -15,9 +15,6 @@ on init
 
 on fs
     install_keyring
-    mkdir /persist 0771 root system
-    mount ext4 /dev/block/by-name/persist /persist noatime nosuid nodev
-    mkdir /persist/OFRP 0775 root system
 
 on early-boot
     exec_start load-touch-modules
