@@ -63,7 +63,6 @@ echo "==> Removing recovery-specific files"
 rm -rf "${PLATFORM_ROOT}/res"
 
 rm -f \
-    "${PLATFORM_ROOT}/system/etc/init/hw/init.rc" \
     "${PLATFORM_ROOT}/miui.factoryreset.rc" \
     "${PLATFORM_ROOT}/system/bin/adbd" \
     "${PLATFORM_ROOT}/system/bin/fastbootd" \
