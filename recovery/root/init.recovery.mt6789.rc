@@ -16,13 +16,16 @@ on init
 on fs
     install_keyring
 
+on post-fs
+    start mtk.plpath.utils.link
+
 on early-boot
     exec_start load-touch-modules
 
 on boot
     start boot-hal-1-2
     start health-hal-2-1
-    start mtk.plpath.utils.link
+
     setprop sys.usb.config adb
 
 # 2. TRIGGERS DE PROPIEDADES (Eventos)
@@ -99,6 +102,8 @@ service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
     class main
     user root
     group root system
+    setenv LD_LIBRARY_PATH /vendor/lib64:/system/lib64
+    setenv LD_PRELOAD /system/lib64/libspinel_libcxx_compat.so
     oneshot
     disabled
     seclabel u:r:recovery:s0
