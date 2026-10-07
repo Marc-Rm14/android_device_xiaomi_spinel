@@ -26,7 +26,7 @@ on fs
     chown system system /dev/0:0:0:49476
     chown system system /dev/ufs-bsg0
 #    enable vendor.keymaster-4-0-mitee
-    enable vendor.keymint-mitee
+#    enable vendor.keymint-mitee
     start tee-supplicant
     mkdir /mnt/vendor/persist/data 0755 system system
     mkdir /mnt/vendor/persist/fdsd 0755 system system
