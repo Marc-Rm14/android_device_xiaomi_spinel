@@ -19,7 +19,7 @@
 /vbmeta_system      emmc      /dev/block/by-name/vbmeta_system                            flags=display="VBMeta System";slotselect;backup=1;flashimg=1
 /vbmeta_vendor      emmc      /dev/block/by-name/vbmeta_vendor                            flags=display="VBMeta Vendor";slotselect;backup=1;flashimg=1
 /misc               emmc      /dev/block/by-name/misc                                     flags=display="Misc";backup=1
-/logo               emmc      /dev/block/by-name/logo                                     flags=display="Logo";backup=1;flashimg=1
+/logo               emmc      /dev/block/by-name/logo                                     flags=display="Logo";backup=1
 
 # =============================================================================
 # Calibración, IMEI, NVRAM y Persistencia
@@ -67,8 +67,8 @@
 # =============================================================================
 # Almacenamiento Removible
 # =============================================================================
-/external_sd   auto   /dev/block/mmcblk0p1   /dev/block/mmcblk0   flags=display="Micro SD Card";storage;wipeingui;removable
-/usb_otg       auto   /dev/block/sdd1        /dev/block/sdd       flags=display="USB OTG";storage;wipeingui;removable
+/external_sd   auto   /dev/block/mmcblk0p1   /dev/block/mmcblk0   flags=display="Micro SD Card";storage;wipeingui;removable;fsflags="utf8"
+/usb_otg       auto   /dev/block/sdd1        /dev/block/sdd       flags=display="USB OTG";storage;wipeingui;removable;fsflags="utf8"
 
 # =============================================================================
 # Imágenes Mapeadas (Flasheables dentro del Super / Lógicas)
