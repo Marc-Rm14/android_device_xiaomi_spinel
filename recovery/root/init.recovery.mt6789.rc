@@ -121,8 +121,6 @@ service vendor.keymint-mitee /vendor/bin/hw/android.hardware.security.keymint@4.
     class early_hal
     user system
     group system drmrpc
-    setenv LD_LIBRARY_PATH /system/lib64
-    setenv LD_PRELOAD /system/lib64/libspinel_libcxx_compat.so
     seclabel u:r:recovery:s0
     disabled
 
@@ -130,7 +128,5 @@ service vendor.gatekeeper_mitee /vendor/bin/hw/android.hardware.gatekeeper-servi
     class hal
     user system
     group system
-    setenv LD_LIBRARY_PATH /system/lib64
-    setenv LD_PRELOAD /system/lib64/libspinel_libcxx_compat.so
     seclabel u:r:recovery:s0
     disabled
