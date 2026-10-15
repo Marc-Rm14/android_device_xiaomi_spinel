@@ -38,13 +38,14 @@ on boot
     setprop sys.usb.config adb
 
 # 2. TRIGGERS DE PROPIEDADES (Eventos)
+on property:crypto.ready=1
+    start vendor.keymint-mitee
+
+
 on property:hwservicemanager.ready=true
     start vendor.gatekeeper_mitee
     start vendor.keymint-mitee
 
-on property:vendor.sys.listener.registered=true
-    start vendor.gatekeeper_mitee
-    start vendor.keymint-mitee
 
 on property:ro.crypto.state=unsupported
     stop vendor.keymint-mitee
@@ -54,7 +55,11 @@ on property:ro.crypto.state=unencrypted
     stop vendor.keymint-mitee
     stop vendor.gatekeeper_mitee
 
-on property:twrp.all.users.decrypted=true
+on property:twrp.decrypt.done=true
+    stop vendor.keymint-mitee
+    stop vendor.gatekeeper_mitee
+
+on property:crypto.ready=0
     stop vendor.keymint-mitee
     stop vendor.gatekeeper_mitee
 
