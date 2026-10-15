@@ -25,7 +25,7 @@ if [ -d "$ramdisk/lib/modules" ]; then
     find "$ramdisk/lib/modules" -maxdepth 1 -type f -name '*.ko' -print0 |
         while IFS= read -r -d '' module; do
             case "$(basename "$module")" in
-                xiaomi_touch.ko|gt9916k.ko)
+                xiaomi_touch.ko|scp.ko|gt9916k.ko)
                     ;;
                 *)
                     rm -f "$module"
