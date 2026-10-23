@@ -154,14 +154,15 @@ TW_THEME := portrait_hdpi
 TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_FRAMERATE := 120
 TW_INCLUDE_FASTBOOTD := true
-TW_MAX_BRIGHTNESS := 2048
+TW_MAX_BRIGHTNESS := 4095
 TW_DEFAULT_BRIGHTNESS := 1000
 TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
-# TW_MTP_DEVICE := "/dev/mtp_usb"
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_EXCLUDE_TWRPAPP := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.usb0/lun.%d/file
 RECOVERY_SDCARD_ON_DATA := true
+TW_EXTRA_LANGUAGES := true
+TW_DEFAULT_LANGUAGE := en
 
 
 # AVB (minimal, como transsion mt6789-common)
@@ -182,7 +183,6 @@ BOARD_RECOVERY_IMAGE_PREPARE = bash $(DEVICE_PATH)/tools/prepare-recovery-root.s
 
 
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
-# TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
 
 # ======================
