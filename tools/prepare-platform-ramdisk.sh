@@ -58,6 +58,42 @@ echo "==> Extracting PLATFORM"
     cpio -idm --quiet --no-absolute-filenames < "${STOCK_CPIO}"
 )
 
+echo "==> Patching panel brightness module"
+
+PANEL_MODULE="panel-p7-41-02-0b-dsc-vdo.ko"
+
+PLATFORM_MODULE="${PLATFORM_ROOT}/lib/modules/${PANEL_MODULE}"
+PATCH_SCRIPT="${DEVICE_DIR}/tools/patch-panel-brightness.py"
+PATCHED_MODULE="${WORK_DIR}/${PANEL_MODULE}.patched"
+
+if [ ! -f "${PLATFORM_MODULE}" ]; then
+    echo "ERROR: Original panel module not found: ${PLATFORM_MODULE}" >&2
+    exit 1
+fi
+
+if [ ! -f "${PATCH_SCRIPT}" ]; then
+    echo "ERROR: Panel patch script not found: ${PATCH_SCRIPT}" >&2
+    exit 1
+fi
+
+python3 "${PATCH_SCRIPT}" \
+    "${PLATFORM_MODULE}" \
+    "${PATCHED_MODULE}"
+
+MODULE_MODE="$(stat -c '%a' "${PLATFORM_MODULE}")"
+
+install -m "${MODULE_MODE}" \
+    "${PATCHED_MODULE}" \
+    "${PLATFORM_MODULE}"
+
+if ! cmp -s "${PATCHED_MODULE}" "${PLATFORM_MODULE}"; then
+    echo "ERROR: Patched module verification failed" >&2
+    exit 1
+fi
+
+echo "==> Patched module installed in PLATFORM:"
+sha256sum "${PLATFORM_MODULE}"
+
 echo "==> Removing recovery-specific files"
 
 rm -rf "${PLATFORM_ROOT}/res"
