@@ -1,0 +1,463 @@
+name: OrangeFox - Build (Spinel)
+
+on:
+  workflow_dispatch:
+    inputs:
+      MANIFEST_BRANCH:
+        description: 'OrangeFox Manifest Branch'
+        required: true
+        default: '14.1'
+        type: choice
+        options:
+          - '12.1'
+          - '14.1'
+
+      DEVICE_PATH:
+        description: 'Specify your Device Path'
+        required: true
+        default: 'device/xiaomi/spinel'
+
+      DEVICE_NAME:
+        description: 'Specify your Device Codename'
+        required: true
+        default: 'spinel'
+
+      BUILD_TARGET:
+        description: 'Specify your Build Target'
+        required: true
+        default: 'vendorboot'
+        type: choice
+        options:
+          - boot
+          - recovery
+          - vendorboot
+
+      ADD_WLAN_SUPPORT:
+        description: 'Add WLAN support (EXPERIMENTAL!!)'
+        type: boolean
+        required: true
+        default: false
+
+      USE_CCACHE:
+        description: 'Use ccache for compilation'
+        type: boolean
+        required: true
+        default: true
+
+      BUILD_JOBS:
+        description: 'Parallel build jobs (-j)'
+        required: false
+        default: '4'
+        type: choice
+        options:
+          - '2'
+          - '3'
+          - '4'
+
+permissions:
+  contents: write
+
+env:
+  ORANGEFOX_BRANCH: ${{ inputs.MANIFEST_BRANCH }}
+  ORANGEFOX_TOP: ${{ github.workspace }}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
+  CCACHE_DIR: ${{ github.workspace }}/.ccache
+  CCACHE_MAXSIZE: '8G'
+  CCACHE_CACHE_VERSION: 'v2'
+
+jobs:
+  build:
+    name: Build OrangeFox for ${{ inputs.DEVICE_NAME }} by ${{ github.actor }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+
+    steps:
+      - name: Free disk space
+        uses: rokibhasansagar/slimhub_actions@main
+
+      - name: Checkout Device Tree
+        uses: actions/checkout@v4
+        with:
+          path: device_tree_src
+
+      - name: Install host packages & setup Java
+        shell: bash
+        run: |
+          set -eo pipefail
+
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            aria2 bc bison build-essential ccache cpio curl device-tree-compiler flex g++-multilib \
+            gcc-multilib git gnupg gperf imagemagick jq \
+            lib32ncurses-dev lib32readline-dev lib32z1-dev libelf-dev \
+            liblz4-tool libncurses-dev libsdl1.2-dev libssl-dev libxml2 \
+            libxml2-utils lz4 openjdk-17-jdk-headless pngcrush \
+            python-is-python3 python3 ripgrep rsync schedtool squashfs-tools \
+            unzip xsltproc zip zlib1g-dev
+
+          sudo apt-get clean
+
+          java_home="$(dirname "$(dirname "$(readlink -f "$(command -v javac)")")")"
+          test -x "${java_home}/bin/java"
+
+          echo "JAVA_HOME=${java_home}" >> "$GITHUB_ENV"
+
+      - name: Setup build swap space
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Configurando swap de 16 GiB en /mnt..."
+
+          sudo swapoff -a || true
+          sudo rm -f /swapfile /mnt/swapfile
+
+          sudo fallocate -l 16G /mnt/swapfile || \
+            sudo dd if=/dev/zero of=/mnt/swapfile bs=1M count=16384
+
+          sudo chmod 600 /mnt/swapfile
+          sudo mkswap /mnt/swapfile
+          sudo swapon /mnt/swapfile
+
+          echo "Swap creado y activado."
+
+      - name: Tune swap usage to avoid OOM kill
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          sudo sysctl -w vm.swappiness=100
+          sudo sysctl -w vm.overcommit_memory=1
+          sudo sysctl -w vm.vfs_cache_pressure=50
+          sudo sysctl -w vm.min_free_kbytes=65536
+
+          echo "--- Memoria y swap ---"
+          free -h
+          swapon --show
+          cat /proc/sys/vm/swappiness
+
+          echo "--- Espacio en disco ---"
+          df -h / /mnt "$GITHUB_WORKSPACE"
+
+      - name: Check runner capacity
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "--- CPU ---"
+          nproc
+
+          echo "--- Memoria ---"
+          free -h
+
+          echo "--- Disco ---"
+          df -h "$GITHUB_WORKSPACE"
+
+      - name: Restore compiler cache
+        id: ccache_restore
+        if: inputs.USE_CCACHE
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: orangefox-${{ inputs.DEVICE_NAME }}-ccache-${{ env.CCACHE_CACHE_VERSION }}-${{ runner.os }}-${{ inputs.MANIFEST_BRANCH }}-${{ github.run_id }}
+          restore-keys: |
+            orangefox-${{ inputs.DEVICE_NAME }}-ccache-${{ env.CCACHE_CACHE_VERSION }}-${{ runner.os }}-${{ inputs.MANIFEST_BRANCH }}-
+
+      - name: Configure compiler cache
+        if: inputs.USE_CCACHE
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          command -v ccache
+
+          install -d "$CCACHE_DIR"
+          install -d "$GITHUB_WORKSPACE/.tmp"
+
+          ccache -M "$CCACHE_MAXSIZE"
+          ccache -o compression=true
+          ccache -o hash_dir=false
+          ccache -o base_dir="$ORANGEFOX_TOP"
+          ccache -z
+          ccache -p
+
+      - name: Install repo tool
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          install -d "$HOME/bin"
+
+          curl --fail --location --retry 5 --retry-all-errors \
+            https://storage.googleapis.com/git-repo-downloads/repo \
+            --output "$HOME/bin/repo"
+
+          chmod +x "$HOME/bin/repo"
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+
+      - name: Set-up Manifest & Sync Sources
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p "${GITHUB_WORKSPACE}/OrangeFox"
+          cd "${GITHUB_WORKSPACE}/OrangeFox"
+
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+
+          git config --global http.version HTTP/1.1
+          git config --global http.postBuffer 524288000
+          git config --global http.maxRequestBuffer 100M
+          git config --global fetch.parallel 4
+
+          if [ -d "sync/.git" ]; then
+            cd sync
+            git fetch --depth=1 origin
+            git reset --hard origin/HEAD
+          else
+            rm -rf sync
+            git clone --depth=1 \
+              https://gitlab.com/OrangeFox/sync.git \
+              sync
+          fi
+
+          cd sync
+          chmod +x ./orangefox_sync.sh
+
+          MAX_RETRIES=3
+          COUNT=0
+
+          until ./orangefox_sync.sh \
+            --branch "${{ inputs.MANIFEST_BRANCH }}" \
+            --path "${ORANGEFOX_TOP}" || [ "$COUNT" -eq "$MAX_RETRIES" ]; do
+            COUNT=$((COUNT + 1))
+
+            echo "La sincronización falló. Reintentando ($COUNT/$MAX_RETRIES)..."
+            sleep 10
+          done
+
+          if [ "$COUNT" -eq "$MAX_RETRIES" ]; then
+            echo "Error: No se pudo sincronizar el manifiesto tras $MAX_RETRIES intentos."
+            exit 1
+          fi
+
+      - name: Apply OrangeFox setup patches
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          sync_dir="${GITHUB_WORKSPACE}/OrangeFox/sync"
+          vold_patch="$sync_dir/patches/patch-vold-fox_14.1.diff"
+
+          if [ -f "$vold_patch" ] && [ -d "$ORANGEFOX_TOP/system/vold" ]; then
+            if git -C "$ORANGEFOX_TOP/system/vold" apply --reverse --check "$vold_patch" 2>/dev/null; then
+              echo "El parche de system/vold ya está aplicado."
+            else
+              git -C "$ORANGEFOX_TOP/system/vold" apply "$vold_patch" || true
+            fi
+          fi
+
+      - name: Clone Android13+ Dependencies For 12.1 Branch
+        if: inputs.MANIFEST_BRANCH == '12.1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${ORANGEFOX_TOP}"
+
+          sed -i 's/<project name="android_hardware_qcom_bootctrl" path="hardware\/qcom-caf\/bootctrl" remote="LineageOS" revision="lineage-19.1-caf" \/>/<project name="android_hardware_qcom_bootctrl" path="hardware\/qcom-caf\/bootctrl" remote="LineageOS" revision="lineage-21.0-caf" \/>/g' "${ORANGEFOX_TOP}/.repo/manifests/twrp-default.xml"
+
+          sed -i '/<!-- Include phh'\''s treble repo for lptools support -->/i \    <!-- Include libmicrohttpd for TWRP -->\n    <project name="adontoo/android_external_libmicrohttpd" path="external/libmicrohttpd" remote="github" revision="ofox-14.1" />\n' "${ORANGEFOX_TOP}/.repo/manifests/twrp-default.xml"
+
+          sed -i '/<project path="bootable\/recovery" name="android_bootable_recovery" remote="TeamWin" revision="android-12.1"\/>/d' "${ORANGEFOX_TOP}/.repo/manifests/twrp-default.xml"
+
+          mv "${ORANGEFOX_TOP}/bootable/recovery" "${ORANGEFOX_TOP}/bootable/recovery-ofrp"
+          repo sync
+
+          mv "${ORANGEFOX_TOP}/bootable/recovery-ofrp" "${ORANGEFOX_TOP}/bootable/recovery"
+
+          cd "${ORANGEFOX_TOP}/bionic/"
+          wget "https://github.com/adontoo/OrangeFox-android_platform_bionic/commit/85b1a7100083006927376f30bb8a67885c6dd71f.patch" -O bionic.patch
+          git am bionic.patch
+
+          cd "${ORANGEFOX_TOP}/external/libmicrohttpd"
+          sed -i 's/^static enum MHD_Result send_response/static enum MHD_Result __attribute__((unused)) send_response/' server.c
+
+      - name: Patching the Source Code For 12.1 Branch
+        if: inputs.MANIFEST_BRANCH == '12.1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${ORANGEFOX_TOP}/bootable/recovery"
+
+          git remote add ymdzq https://github.com/ymdzq/OrangeFox_Recovery || true
+          git fetch ymdzq fox_12.1
+          git merge --no-ff ymdzq/fox_12.1 -m "Apply custom patches"
+
+          if [ "${{ inputs.ADD_WLAN_SUPPORT }}" = "true" ]; then
+            wget "https://github.com/ymdzq/OrangeFox_Recovery/commit/f8712872b9ec663b658a1e8eba4840877fe45ea6.patch" -O wlan.patch
+            git am wlan.patch
+
+            wget "https://github.com/ymdzq/OrangeFox_Recovery/commit/55743730c43681a777c4eacddd9d64a84dce3a54.patch" -O wlan2.patch
+            git am wlan2.patch
+          fi
+
+      - name: Add WLAN support For 14.1 Branch
+        if: inputs.MANIFEST_BRANCH == '14.1' && inputs.ADD_WLAN_SUPPORT
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${ORANGEFOX_TOP}"
+
+          if [ ! -d external/libmicrohttpd/.git ]; then
+            git clone --depth=1 \
+              https://github.com/adontoo/android_external_libmicrohttpd \
+              -b ofox-14.1 \
+              external/libmicrohttpd
+          fi
+
+          rm -rf bionic
+          git clone --depth=1 \
+            https://github.com/adontoo/OrangeFox-android_platform_bionic \
+            bionic
+
+          cd "${ORANGEFOX_TOP}/bootable/recovery"
+
+          wget "https://github.com/adontoo/device_xiaomi_sm8750_OFRP/raw/refs/heads/fox_14.1/patches/ofox_bootable_recovery.patch" -O wlan.patch
+          git apply wlan.patch
+
+          wget "https://github.com/ymdzq/OrangeFox_Recovery/commit/55743730c43681a777c4eacddd9d64a84dce3a54.patch" -O wlan2.patch
+          git apply wlan2.patch
+
+      - name: Place Device Tree into Source
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          DEVICE_TREE="${ORANGEFOX_TOP}/${{ inputs.DEVICE_PATH }}"
+
+          mkdir -p "$(dirname "$DEVICE_TREE")"
+          rm -rf "$DEVICE_TREE"
+
+          mv "${GITHUB_WORKSPACE}/device_tree_src" "$DEVICE_TREE"
+
+          if [ ! -d "$DEVICE_TREE" ]; then
+            echo "Error: el device tree no se colocó correctamente en $DEVICE_TREE"
+            exit 1
+          fi
+
+          if ! grep -Rqs "PRODUCT_DEVICE := ${{ inputs.DEVICE_NAME }}" "$DEVICE_TREE"; then
+            echo "ADVERTENCIA: No se encontró PRODUCT_DEVICE := ${{ inputs.DEVICE_NAME }} en el device tree."
+          fi
+
+      - name: Building OrangeFox
+        shell: bash
+        run: |
+          set -eo pipefail
+          cd "${ORANGEFOX_TOP}"
+
+          if [ "${{ inputs.USE_CCACHE }}" = "true" ]; then
+            export USE_CCACHE=1
+            export CCACHE_EXEC=/usr/bin/ccache
+          fi
+
+          export TOP="${ORANGEFOX_TOP}"
+          export TMPDIR="${GITHUB_WORKSPACE}/.tmp"
+          mkdir -p "$TMPDIR"
+
+          export _JAVA_OPTIONS="-Xmx4g"
+          export NINJA_STATUS="[%p %f/%t] "
+
+          (
+            while true; do
+              echo "===== $(date -u '+%Y-%m-%d %H:%M:%S') ====="
+              free -h
+              df -h "$GITHUB_WORKSPACE" /mnt
+
+              swap_used_mb=$(awk '/SwapTotal/{t=$2} /SwapFree/{f=$2} END{printf "%d", (t-f)/1024}' /proc/meminfo)
+              if [ "${swap_used_mb:-0}" -gt 6144 ]; then
+                echo "--- Alerta swap (${swap_used_mb} MiB): top RAM ---"
+                ps -eo pid,ppid,etime,%cpu,%mem,rss,cmd --sort=-rss | head -12
+              fi
+
+              sleep 180
+            done
+          ) &
+
+          MONITOR_PID=$!
+          trap 'kill "$MONITOR_PID" 2>/dev/null || true' EXIT
+
+          source build/envsetup.sh
+          export ALLOW_MISSING_DEPENDENCIES=true
+
+          if [ "${{ inputs.MANIFEST_BRANCH }}" = "14.1" ]; then
+            lunch twrp_${{ inputs.DEVICE_NAME }}-ap2a-eng
+          else
+            lunch twrp_${{ inputs.DEVICE_NAME }}-eng
+          fi
+
+          mka -j"${{ inputs.BUILD_JOBS }}" adbd ${{ inputs.BUILD_TARGET }}image 2>&1 | tee "${GITHUB_WORKSPACE}/build.log"
+
+          if [ "${{ inputs.USE_CCACHE }}" = "true" ] && command -v ccache >/dev/null 2>&1; then
+            echo "=== Estadísticas ccache ==="
+            ccache -s || true
+          fi
+
+      - name: Build system-compatible vendor_boot
+        if: inputs.BUILD_TARGET == 'vendorboot'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${ORANGEFOX_TOP}"
+
+          chmod +x \
+            ${{ inputs.DEVICE_PATH }}/tools/prepare-platform-ramdisk.sh \
+            ${{ inputs.DEVICE_PATH }}/tools/build-system-compatible-vendor-boot.sh
+
+          ${{ inputs.DEVICE_PATH }}/tools/prepare-platform-ramdisk.sh
+          ${{ inputs.DEVICE_PATH }}/tools/build-system-compatible-vendor-boot.sh
+
+      - name: Collect release artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${GITHUB_WORKSPACE}/release_out"
+
+          shopt -s nullglob
+          out_dir="${ORANGEFOX_TOP}/out/target/product/${{ inputs.DEVICE_NAME }}"
+          files=("$out_dir"/OrangeFox*.img "$out_dir"/OrangeFox*.zip "$out_dir"/*system-compatible*.img)
+
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "Error: no se encontraron artefactos de salida en $out_dir"
+            exit 1
+          fi
+
+          cp -v "${files[@]}" "${GITHUB_WORKSPACE}/release_out/"
+          cp -v "${GITHUB_WORKSPACE}/build.log" "${GITHUB_WORKSPACE}/release_out/" 2>/dev/null || true
+
+      - name: Save compiler cache
+        if: ${{ success() && inputs.USE_CCACHE }}
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: orangefox-${{ inputs.DEVICE_NAME }}-ccache-${{ env.CCACHE_CACHE_VERSION }}-${{ runner.os }}-${{ inputs.MANIFEST_BRANCH }}-${{ github.run_id }}
+
+      - name: Set Release Properties
+        shell: bash
+        run: |
+          set -eo pipefail
+          echo "BUILD_DATE=$(TZ=America/Managua date +%Y%m%d)" >> $GITHUB_ENV
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ github.workspace }}/release_out/*
+          name: OrangeFox Recovery for ${{ inputs.DEVICE_NAME }} // ${{ env.BUILD_DATE }}
+          tag_name: ${{ github.run_id }}
+          body: |
+            ## OrangeFox Recovery Build - Unofficial
+            - **Build:** fox_${{ inputs.MANIFEST_BRANCH }}
+            - **Device:** [Device Tree (${{ github.ref_name }})](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+            - **Commit:** Most recent [commit](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) during building.
