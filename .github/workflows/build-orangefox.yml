@@ -87,14 +87,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "Configurando swap de 12 GiB..."
+          echo "Configurando swap de 16 GiB en /mnt..."
           sudo swapoff -a || true
-          sudo rm -f /swapfile
-          sudo fallocate -l 12G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=12288
-          sudo chmod 600 /swapfile
-          sudo mkswap /swapfile
-          sudo swapon /swapfile
+          sudo rm -f /swapfile /mnt/swapfile
+          sudo fallocate -l 16G /mnt/swapfile || sudo dd if=/dev/zero of=/mnt/swapfile bs=1M count=16384
+          sudo chmod 600 /mnt/swapfile
+          sudo mkswap /mnt/swapfile
+          sudo swapon /mnt/swapfile
+          sudo sysctl -w vm.swappiness=20
           free -h
+          df -h / /mnt "$GITHUB_WORKSPACE"
 
       - name: Check runner capacity
         shell: bash
@@ -251,14 +253,21 @@ jobs:
           fi
 
           export TOP="${ORANGEFOX_TOP}"
+          export GOMEMLIMIT=10GiB
+          export GOGC=80
+          export _JAVA_OPTIONS="-Xmx4g"
+          export NINJA_STATUS="[%p %f/%t] "
+
           source build/envsetup.sh
           export ALLOW_MISSING_DEPENDENCIES=true
 
           if [ "${{ inputs.MANIFEST_BRANCH }}" = "14.1" ]; then
-            lunch twrp_${{ inputs.DEVICE_NAME }}-ap2a-eng && mka adbd ${{ inputs.BUILD_TARGET }}image
+            lunch twrp_${{ inputs.DEVICE_NAME }}-ap2a-eng
           else
-            lunch twrp_${{ inputs.DEVICE_NAME }}-eng && mka adbd ${{ inputs.BUILD_TARGET }}image
+            lunch twrp_${{ inputs.DEVICE_NAME }}-eng
           fi
+
+          mka -j3 adbd ${{ inputs.BUILD_TARGET }}image
 
       - name: Build system-compatible vendor_boot
         shell: bash
